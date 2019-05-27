@@ -29,10 +29,9 @@ public class HistoryForm {
         this.thirdPlaceClubName = thirdPlaceClubName;
     }
 
-    public Integer compareDate(String secondDate){
+    public Integer compareDate(String secondDate) {
         DateFormat format = new SimpleDateFormat("dd.MM.yyyy", Locale.ENGLISH);
-        if (secondDate.matches("^\\d{1,2}\\.\\d{1,2}\\.\\d{4}$"))
-        {
+        if (secondDate.matches("^\\d{1,2}\\.\\d{1,2}\\.\\d{4}$")) {
             Date date1 = null;
             try {
                 date1 = format.parse(date);
@@ -45,9 +44,9 @@ public class HistoryForm {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            if(date1.getTime()>date2.getTime())
+            if (date1.getTime() > date2.getTime())
                 return -1;
-            if(date1.getTime()<=date2.getTime())
+            if (date1.getTime() <= date2.getTime())
                 return 1;
         }
         return 0;

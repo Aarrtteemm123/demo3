@@ -41,7 +41,7 @@ public class CourtDAO {
             tempCourt.setNumberOfPlayground(rs.getInt(4));
             courts.add(tempCourt);
         }
-        return courts ;
+        return courts;
     }
 
     public void saveCourt(Court courtForm) throws SQLException {
@@ -67,7 +67,7 @@ public class CourtDAO {
     }
 
     public void deleteCourt(int id) throws SQLException {
-        String query = "UPDATE organizes_and_history_sports_competitions SET address=\'null\'"+
+        String query = "UPDATE organizes_and_history_sports_competitions SET address=\'null\'" +
                 " WHERE address=\'" + getCourtById(id).getAddress() + "\' ;";
         stmt.executeUpdate(query);
         query = "DELETE FROM court WHERE idcourt=" + id + ";";
@@ -78,13 +78,13 @@ public class CourtDAO {
         String query = "UPDATE court SET name=\'" + updateCourt.getName() + "\'" +
                 " WHERE idcourt=" + updateCourt.getId() + ";";
         stmt.executeUpdate(query);
-        query = "UPDATE organizes_and_history_sports_competitions SET address=\'" + updateCourt.getAddress()  +
+        query = "UPDATE organizes_and_history_sports_competitions SET address=\'" + updateCourt.getAddress() +
                 "\' WHERE address=\'" + getCourtById(updateCourt.getId()).getAddress() + "\';";
         stmt.executeUpdate(query);
         query = "UPDATE court SET address=\'" + updateCourt.getAddress() + "\'" +
                 " WHERE idcourt=" + updateCourt.getId() + ";";
         stmt.executeUpdate(query);
-        query = "UPDATE court SET numberOfPlayground=" + updateCourt.getNumberOfPlayground()  +
+        query = "UPDATE court SET numberOfPlayground=" + updateCourt.getNumberOfPlayground() +
                 " WHERE idcourt=" + updateCourt.getId() + ";";
         stmt.executeUpdate(query);
     }

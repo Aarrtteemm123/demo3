@@ -41,7 +41,7 @@ public class SportGymDAO {
             tempSportGym.setNumberOfSimulators(rs.getInt(4));
             sportGyms.add(tempSportGym);
         }
-        return sportGyms ;
+        return sportGyms;
     }
 
     public void saveSportGym(SportGym sportGymForm) throws SQLException {
@@ -67,10 +67,10 @@ public class SportGymDAO {
     }
 
     public void deleteSportGym(int id) throws SQLException {
-        String query = "UPDATE organizes_and_history_sports_competitions SET address=\'null\'"+
+        String query = "UPDATE organizes_and_history_sports_competitions SET address=\'null\'" +
                 " WHERE address=\'" + getSportGymById(id).getAddress() + "\' ;";
         stmt.executeUpdate(query);
-         query = "DELETE FROM sport_gym WHERE idsport_gym=" + id + ";";
+        query = "DELETE FROM sport_gym WHERE idsport_gym=" + id + ";";
         stmt.executeUpdate(query);
     }
 
@@ -78,13 +78,13 @@ public class SportGymDAO {
         String query = "UPDATE sport_gym SET name=\'" + updateSportGym.getName() + "\'" +
                 " WHERE idsport_gym=" + updateSportGym.getId() + ";";
         stmt.executeUpdate(query);
-        query = "UPDATE organizes_and_history_sports_competitions SET address=\'" + updateSportGym.getAddress()  +
+        query = "UPDATE organizes_and_history_sports_competitions SET address=\'" + updateSportGym.getAddress() +
                 "\' WHERE address=\'" + getSportGymById(updateSportGym.getId()).getAddress() + "\';";
         stmt.executeUpdate(query);
         query = "UPDATE sport_gym SET address=\'" + updateSportGym.getAddress() + "\'" +
                 " WHERE idsport_gym=" + updateSportGym.getId() + ";";
         stmt.executeUpdate(query);
-        query = "UPDATE sport_gym SET numberOfSimulators=" + updateSportGym.getNumberOfSimulators()  +
+        query = "UPDATE sport_gym SET numberOfSimulators=" + updateSportGym.getNumberOfSimulators() +
                 " WHERE idsport_gym=" + updateSportGym.getId() + ";";
         stmt.executeUpdate(query);
     }

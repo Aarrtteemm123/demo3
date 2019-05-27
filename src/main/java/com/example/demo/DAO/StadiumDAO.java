@@ -71,7 +71,7 @@ public class StadiumDAO {
     }
 
     public void deleteStadium(int id) throws SQLException {
-        String query = "UPDATE organizes_and_history_sports_competitions SET address=\'null\'"+
+        String query = "UPDATE organizes_and_history_sports_competitions SET address=\'null\'" +
                 " WHERE address=\'" + getStadiumById(id).getAddress() + "\' ;";
         stmt.executeUpdate(query);
         query = "DELETE FROM stadium WHERE idstadium=" + id + ";";
@@ -82,7 +82,7 @@ public class StadiumDAO {
         String query = "UPDATE stadium SET name=\'" + updatedStadium.getName() + "\'" +
                 " WHERE idstadium=" + updatedStadium.getId() + ";";
         stmt.executeUpdate(query);
-        query = "UPDATE organizes_and_history_sports_competitions SET address=\'" + updatedStadium.getAddress()  +
+        query = "UPDATE organizes_and_history_sports_competitions SET address=\'" + updatedStadium.getAddress() +
                 "\' WHERE address=\'" + getStadiumById(updatedStadium.getId()).getAddress() + "\';";
         stmt.executeUpdate(query);
         query = "UPDATE stadium SET address=\'" + updatedStadium.getAddress() + "\'" +

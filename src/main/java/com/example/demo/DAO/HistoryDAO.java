@@ -35,7 +35,7 @@ public class HistoryDAO {
         String query = "SELECT * FROM organizes_and_history_sports_competitions;";
         rs = stmt.executeQuery(query);
         while (rs.next()) {
-            History tempHistory =new History();
+            History tempHistory = new History();
             tempHistory.setId(rs.getInt(1));
             tempHistory.setNameOrganizer(rs.getString(2));
             tempHistory.setPersonalKey(rs.getInt(3));
@@ -54,7 +54,7 @@ public class HistoryDAO {
         String query = "SELECT * FROM organizes_and_history_sports_competitions WHERE idorganizes_and_history_sports_competitions=" + id + ";";
         rs = stmt.executeQuery(query);
         rs.next();
-        History tempHistory =new History();
+        History tempHistory = new History();
         tempHistory.setId(rs.getInt(1));
         tempHistory.setNameOrganizer(rs.getString(2));
         tempHistory.setPersonalKey(rs.getInt(3));
@@ -71,9 +71,9 @@ public class HistoryDAO {
         String query = "SELECT * FROM organizes_and_history_sports_competitions WHERE idorganizes_and_history_sports_competitions=" + id + ";";
         rs = stmt.executeQuery(query);
         rs.next();
-        int firstClub=rs.getInt(7);
-        int secondClub=rs.getInt(8);
-        int thirdClub=rs.getInt(9);
+        int firstClub = rs.getInt(7);
+        int secondClub = rs.getInt(8);
+        int thirdClub = rs.getInt(9);
         query = "DELETE FROM organizes_and_history_sports_competitions WHERE idorganizes_and_history_sports_competitions=" + id + ";";
         stmt.executeUpdate(query);
         query = "UPDATE club SET 1thWin=1thWin-1" +
@@ -83,11 +83,11 @@ public class HistoryDAO {
                 " WHERE idclub=" + secondClub + ";";
         stmt.executeUpdate(query);
         query = "UPDATE club SET 3thWin=3thWin-1" +
-                " WHERE idclub=" + thirdClub+ ";";
+                " WHERE idclub=" + thirdClub + ";";
         stmt.executeUpdate(query);
 
         query = "UPDATE sportsmen SET numberOfParticipation=numberOfParticipation-1" +
-                " WHERE clubId=" + firstClub+ " and numberOfParticipation!=0;";
+                " WHERE clubId=" + firstClub + " and numberOfParticipation!=0;";
         stmt.executeUpdate(query);
         query = "UPDATE sportsmen SET numberOfParticipation=numberOfParticipation-1" +
                 " WHERE clubId=" + secondClub + " and numberOfParticipation!=0;";
@@ -116,12 +116,12 @@ public class HistoryDAO {
         Integer personalKey = history.getPersonalKey();
         Integer sportId = history.getSportId();
         String date = history.getDate();
-        String address= history.getAddress();
-        Integer firstPlaceClubId= history.getFirstPlaceClubId();
-        Integer secondPlaceClubId= history.getSecondPlaceClubId();
-        Integer thirdPlaceClubId= history.getThirdPlaceClubId();
-        String values = id + ",\'" + name + "\'," + personalKey+","+sportId+",\'"
-                +date+"\',\'"+ address + "\',"+firstPlaceClubId+","+secondPlaceClubId+","+thirdPlaceClubId;
+        String address = history.getAddress();
+        Integer firstPlaceClubId = history.getFirstPlaceClubId();
+        Integer secondPlaceClubId = history.getSecondPlaceClubId();
+        Integer thirdPlaceClubId = history.getThirdPlaceClubId();
+        String values = id + ",\'" + name + "\'," + personalKey + "," + sportId + ",\'"
+                + date + "\',\'" + address + "\'," + firstPlaceClubId + "," + secondPlaceClubId + "," + thirdPlaceClubId;
         String query = "INSERT INTO organizes_and_history_sports_competitions" + " VALUES (" + values + ");";
         stmt.executeUpdate(query);
         query = "UPDATE club SET 1thWin=1thWin+1" +
@@ -131,11 +131,11 @@ public class HistoryDAO {
                 " WHERE idclub=" + history.getSecondPlaceClubId() + ";";
         stmt.executeUpdate(query);
         query = "UPDATE club SET 3thWin=3thWin+1" +
-                " WHERE idclub=" + history.getThirdPlaceClubId()+ ";";
+                " WHERE idclub=" + history.getThirdPlaceClubId() + ";";
         stmt.executeUpdate(query);
 
         query = "UPDATE sportsmen SET numberOfParticipation=numberOfParticipation+1" +
-                " WHERE clubId=" + history.getFirstPlaceClubId()+ ";";
+                " WHERE clubId=" + history.getFirstPlaceClubId() + ";";
         stmt.executeUpdate(query);
         query = "UPDATE sportsmen SET numberOfParticipation=numberOfParticipation+1" +
                 " WHERE clubId=" + history.getSecondPlaceClubId() + ";";
@@ -146,53 +146,43 @@ public class HistoryDAO {
     }
 
     public List<HistoryForm> toHistoryForm(List<History> historyList) throws SQLException {
-        List<HistoryForm> historyFormList =new ArrayList<>(historyList.size());
-        for (int i = 0; i < historyList.size(); i++)
-        {
+        List<HistoryForm> historyFormList = new ArrayList<>(historyList.size());
+        for (int i = 0; i < historyList.size(); i++) {
             History history = historyList.get(i);
-            HistoryForm historyForm =new HistoryForm();
+            HistoryForm historyForm = new HistoryForm();
             historyForm.setId(history.getId());
             historyForm.setNameOrganizer(history.getNameOrganizer());
             historyForm.setPersonalKey(history.getPersonalKey());
-            if (history.getSportId()!=0)
-            {
-                String query="SELECT * FROM sport WHERE idsport="+ history.getSportId()+";";
+            if (history.getSportId() != 0) {
+                String query = "SELECT * FROM sport WHERE idsport=" + history.getSportId() + ";";
                 rs = stmt.executeQuery(query);
                 rs.next();
                 historyForm.setSport(rs.getString(2));
-            }
-            else
-            {
+            } else {
                 historyForm.setSport("null");
             }
             historyForm.setDate(history.getDate());
             historyForm.setAddress(history.getAddress());
-            if (history.getFirstPlaceClubId()!=0)
-            {
-                String query="SELECT * FROM club WHERE idclub="+ history.getFirstPlaceClubId()+";";
+            if (history.getFirstPlaceClubId() != 0) {
+                String query = "SELECT * FROM club WHERE idclub=" + history.getFirstPlaceClubId() + ";";
                 rs = stmt.executeQuery(query);
                 rs.next();
                 historyForm.setFirstPlaceClubName(rs.getString(2));
-            }
-            else
+            } else
                 historyForm.setFirstPlaceClubName("null");
-            if (history.getSecondPlaceClubId()!=0)
-            {
-                String query="SELECT * FROM club WHERE idclub="+ history.getSecondPlaceClubId()+";";
+            if (history.getSecondPlaceClubId() != 0) {
+                String query = "SELECT * FROM club WHERE idclub=" + history.getSecondPlaceClubId() + ";";
                 rs = stmt.executeQuery(query);
                 rs.next();
                 historyForm.setSecondPlaceClubName(rs.getString(2));
-            }
-            else
+            } else
                 historyForm.setSecondPlaceClubName("null");
-            if (history.getThirdPlaceClubId()!=0)
-            {
-                String query="SELECT * FROM club WHERE idclub="+ history.getThirdPlaceClubId()+";";
+            if (history.getThirdPlaceClubId() != 0) {
+                String query = "SELECT * FROM club WHERE idclub=" + history.getThirdPlaceClubId() + ";";
                 rs = stmt.executeQuery(query);
                 rs.next();
                 historyForm.setThirdPlaceClubName(rs.getString(2));
-            }
-            else
+            } else
                 historyForm.setThirdPlaceClubName("null");
             historyFormList.add(historyForm);
         }
@@ -200,25 +190,25 @@ public class HistoryDAO {
     }
 
     public History toHistory(HistoryForm historyForm) throws SQLException {
-        History history =new History();
+        History history = new History();
         history.setId(historyForm.getId());
         history.setNameOrganizer(historyForm.getNameOrganizer());
         history.setPersonalKey(historyForm.getPersonalKey());
-        String query="SELECT * FROM sport WHERE name= \'"+ historyForm.getSport()+"\';";
+        String query = "SELECT * FROM sport WHERE name= \'" + historyForm.getSport() + "\';";
         rs = stmt.executeQuery(query);
         rs.next();
         history.setSportId(rs.getInt(1));
         history.setDate(historyForm.getDate());
         history.setAddress(historyForm.getAddress());
-        query="SELECT * FROM club WHERE name=\'"+ historyForm.getFirstPlaceClubName()+"\';";
+        query = "SELECT * FROM club WHERE name=\'" + historyForm.getFirstPlaceClubName() + "\';";
         rs = stmt.executeQuery(query);
         rs.next();
         history.setFirstPlaceClubId(rs.getInt(1));
-        query="SELECT * FROM club WHERE name=\'"+ historyForm.getSecondPlaceClubName()+"\';";
+        query = "SELECT * FROM club WHERE name=\'" + historyForm.getSecondPlaceClubName() + "\';";
         rs = stmt.executeQuery(query);
         rs.next();
         history.setSecondPlaceClubId(rs.getInt(1));
-        query="SELECT * FROM club WHERE name=\'"+ historyForm.getThirdPlaceClubName()+"\';";
+        query = "SELECT * FROM club WHERE name=\'" + historyForm.getThirdPlaceClubName() + "\';";
         rs = stmt.executeQuery(query);
         rs.next();
         history.setThirdPlaceClubId(rs.getInt(1));

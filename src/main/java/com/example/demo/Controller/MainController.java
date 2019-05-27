@@ -14,8 +14,6 @@ import java.util.List;
 @Controller
 public class MainController {
 
-    // 4. Стилі
-
     private final String url = "jdbc:mysql://localhost:3306/information_system_of_sports_organizations?serverTimezone=UTC";
     private final String user = "root";
     private final String passwordDb = "2580";
@@ -63,15 +61,19 @@ public class MainController {
         return model;
     }
 
-    @RequestMapping(value = "/task10", method = RequestMethod.GET)
+    //--------------------Info--------------------------------------------------------------
+
+    @RequestMapping(value = "/task", method = RequestMethod.GET)
     public String getTask(Model model) {
-        return "task10";
+        return "task";
     }
 
     @RequestMapping(value = "/document", method = RequestMethod.GET)
     public String getDocument(Model model) {
         return "document";
     }
+
+    //-------------------------------------------------------------------------------------
 
     //-------------------Password----------------------------------------------------------
 
@@ -154,7 +156,7 @@ public class MainController {
     public String saveStadium(@ModelAttribute Stadium stadiumForm, Model model) throws SQLException {
         if (flagAccess == null)
             return "redirect:/title";
-        if (flagAccess && tableController.checkIdInTable("stadium", stadiumForm.getId()) && tableController.checkAddressInTable("stadium", stadiumForm.getAddress())&&stadiumForm.getNumberOfViewers()>0) {
+        if (flagAccess && tableController.checkIdInTable("stadium", stadiumForm.getId()) && tableController.checkAddressInTable("stadium", stadiumForm.getAddress()) && stadiumForm.getNumberOfViewers() > 0) {
             stadiumDAO.saveStadium(stadiumForm);
             return "redirect:/stadium/list";
         } else
@@ -175,7 +177,7 @@ public class MainController {
     public String saveEditStadium(@ModelAttribute Stadium stadium, Model model) throws SQLException {
         if (flagAccess == null)
             return "redirect:/title";
-        if (flagAccess && tableController.checkUpdateAddress("stadium",stadium.getAddress(),globalBufferId)&&stadium.getNumberOfViewers()>0) {
+        if (flagAccess && tableController.checkUpdateAddress("stadium", stadium.getAddress(), globalBufferId) && stadium.getNumberOfViewers() > 0) {
             stadium.setId(globalBufferId);
             stadiumDAO.updateStadium(stadium);
         }
@@ -245,13 +247,10 @@ public class MainController {
     public String saveManege(@ModelAttribute Manege manegeForm, Model model) throws SQLException {
         if (flagAccess == null)
             return "redirect:/title";
-        if (flagAccess && tableController.checkIdInTable("manege", manegeForm.getId()) && tableController.checkAddressInTable("manege", manegeForm.getAddress()))
-        {
+        if (flagAccess && tableController.checkIdInTable("manege", manegeForm.getId()) && tableController.checkAddressInTable("manege", manegeForm.getAddress())) {
             manegeDAO.saveManege(manegeForm);
             return "redirect:/manege/list";
-        }
-        else
-        {
+        } else {
             return "redirect:/manege/add";
         }
     }
@@ -270,7 +269,7 @@ public class MainController {
     public String saveEditManege(@ModelAttribute Manege manege, Model model) throws SQLException {
         if (flagAccess == null)
             return "redirect:/title";
-        if (flagAccess && tableController.checkUpdateAddress("manege",manege.getAddress(),globalBufferId)) {
+        if (flagAccess && tableController.checkUpdateAddress("manege", manege.getAddress(), globalBufferId)) {
             manege.setId(globalBufferId);
             manegeDAO.updateManege(manege);
         }
@@ -341,8 +340,7 @@ public class MainController {
     public String saveSportGym(@ModelAttribute SportGym sportGymForm, Model model) throws SQLException {
         if (flagAccess == null)
             return "redirect:/title";
-        if (flagAccess && tableController.checkIdInTable("sport_gym", sportGymForm.getId()) && tableController.checkAddressInTable("sport_gym", sportGymForm.getAddress())&&sportGymForm.getNumberOfSimulators()>0)
-        {
+        if (flagAccess && tableController.checkIdInTable("sport_gym", sportGymForm.getId()) && tableController.checkAddressInTable("sport_gym", sportGymForm.getAddress()) && sportGymForm.getNumberOfSimulators() > 0) {
             sportGymDAO.saveSportGym(sportGymForm);
             return "redirect:/sportGym/list";
         }
@@ -363,7 +361,7 @@ public class MainController {
     public String saveEditSportGym(@ModelAttribute SportGym sportGym, Model model) throws SQLException {
         if (flagAccess == null)
             return "redirect:/title";
-        if (flagAccess && tableController.checkUpdateAddress("sport_gym", sportGym.getAddress(),globalBufferId)&&sportGym.getNumberOfSimulators()>0) {
+        if (flagAccess && tableController.checkUpdateAddress("sport_gym", sportGym.getAddress(), globalBufferId) && sportGym.getNumberOfSimulators() > 0) {
             sportGym.setId(globalBufferId);
             sportGymDAO.updateSportGym(sportGym);
         }
@@ -433,8 +431,7 @@ public class MainController {
     public String saveCourt(@ModelAttribute Court courtForm, Model model) throws SQLException {
         if (flagAccess == null)
             return "redirect:/title";
-        if (flagAccess && tableController.checkIdInTable("court", courtForm.getId()) && tableController.checkAddressInTable("court", courtForm.getAddress())&&courtForm.getNumberOfPlayground()>0)
-        {
+        if (flagAccess && tableController.checkIdInTable("court", courtForm.getId()) && tableController.checkAddressInTable("court", courtForm.getAddress()) && courtForm.getNumberOfPlayground() > 0) {
             courtDAO.saveCourt(courtForm);
             return "redirect:/court/list";
         }
@@ -455,7 +452,7 @@ public class MainController {
     public String saveEditCourt(@ModelAttribute Court court, Model model) throws SQLException {
         if (flagAccess == null)
             return "redirect:/title";
-        if (flagAccess && tableController.checkUpdateAddress("court", court.getAddress(),globalBufferId)&&court.getNumberOfPlayground()>0) {
+        if (flagAccess && tableController.checkUpdateAddress("court", court.getAddress(), globalBufferId) && court.getNumberOfPlayground() > 0) {
             court.setId(globalBufferId);
             courtDAO.updateCourt(court);
         }
@@ -533,8 +530,7 @@ public class MainController {
     public String saveSwimmingPool(@ModelAttribute SwimmingPool swimmingPoolForm, Model model) throws SQLException {
         if (flagAccess == null)
             return "redirect:/title";
-        if (flagAccess && tableController.checkIdInTable("swimming_pool", swimmingPoolForm.getId()) && tableController.checkAddressInTable("swimming_pool", swimmingPoolForm.getAddress())&&swimmingPoolForm.getDepth()>0&&swimmingPoolForm.getNumberOfTower()>=0)
-        {
+        if (flagAccess && tableController.checkIdInTable("swimming_pool", swimmingPoolForm.getId()) && tableController.checkAddressInTable("swimming_pool", swimmingPoolForm.getAddress()) && swimmingPoolForm.getDepth() > 0 && swimmingPoolForm.getNumberOfTower() >= 0) {
             swimmingPoolDAO.saveSwimmingPool(swimmingPoolForm);
             return "redirect:/swimmingPool/list";
         }
@@ -555,7 +551,7 @@ public class MainController {
     public String saveEditSwimmingPool(@ModelAttribute SwimmingPool swimmingPool, Model model) throws SQLException {
         if (flagAccess == null)
             return "redirect:/title";
-        if (flagAccess && tableController.checkUpdateAddress("swimming_pool", swimmingPool.getAddress(),globalBufferId)&&swimmingPool.getDepth()>0&&swimmingPool.getNumberOfTower()>=0) {
+        if (flagAccess && tableController.checkUpdateAddress("swimming_pool", swimmingPool.getAddress(), globalBufferId) && swimmingPool.getDepth() > 0 && swimmingPool.getNumberOfTower() >= 0) {
             swimmingPool.setId(globalBufferId);
             swimmingPoolDAO.updateSwimmingPool(swimmingPool);
         }
@@ -633,8 +629,7 @@ public class MainController {
     public String saveTrack(@ModelAttribute Track trackForm, Model model) throws SQLException {
         if (flagAccess == null)
             return "redirect:/title";
-        if (flagAccess && tableController.checkIdInTable("track", trackForm.getId()) && tableController.checkAddressInTable("track", trackForm.getAddress())&&trackForm.getLengthTrack()>0)
-        {
+        if (flagAccess && tableController.checkIdInTable("track", trackForm.getId()) && tableController.checkAddressInTable("track", trackForm.getAddress()) && trackForm.getLengthTrack() > 0) {
             trackDAO.saveTrack(trackForm);
             return "redirect:/track/list";
         }
@@ -655,7 +650,7 @@ public class MainController {
     public String saveEditTrack(@ModelAttribute Track track, Model model) throws SQLException {
         if (flagAccess == null)
             return "redirect:/title";
-        if (flagAccess && tableController.checkUpdateAddress("track", track.getAddress(),globalBufferId)&&track.getLengthTrack()>0) {
+        if (flagAccess && tableController.checkUpdateAddress("track", track.getAddress(), globalBufferId) && track.getLengthTrack() > 0) {
             track.setId(globalBufferId);
             trackDAO.updateTrack(track);
         }
@@ -725,8 +720,7 @@ public class MainController {
     public String saveBoardGames(@ModelAttribute BoardGames boardGamesForm, Model model) throws SQLException {
         if (flagAccess == null)
             return "redirect:/title";
-        if (flagAccess && tableController.checkIdInTable("board_games", boardGamesForm.getId()) && tableController.checkAddressInTable("board_games", boardGamesForm.getAddress())&&boardGamesForm.getNumberOfTable()>=0)
-        {
+        if (flagAccess && tableController.checkIdInTable("board_games", boardGamesForm.getId()) && tableController.checkAddressInTable("board_games", boardGamesForm.getAddress()) && boardGamesForm.getNumberOfTable() >= 0) {
             boardGamesDAO.saveBoardGames(boardGamesForm);
             return "redirect:/boardGames/list";
         }
@@ -747,7 +741,7 @@ public class MainController {
     public String saveEditBoardGames(@ModelAttribute BoardGames boardGames, Model model) throws SQLException {
         if (flagAccess == null)
             return "redirect:/title";
-        if (flagAccess && tableController.checkUpdateAddress("board_games", boardGames.getAddress(),globalBufferId)&&boardGames.getNumberOfTable()>=0) {
+        if (flagAccess && tableController.checkUpdateAddress("board_games", boardGames.getAddress(), globalBufferId) && boardGames.getNumberOfTable() >= 0) {
             boardGames.setId(globalBufferId);
             boardGamesDAO.updateBoardGames(boardGames);
         }
@@ -817,8 +811,7 @@ public class MainController {
     public String saveIceRink(@ModelAttribute IceRink iceRinkForm, Model model) throws SQLException {
         if (flagAccess == null)
             return "redirect:/title";
-        if (flagAccess && tableController.checkIdInTable("ice_rink", iceRinkForm.getId()) && tableController.checkAddressInTable("ice_rink", iceRinkForm.getAddress())&&iceRinkForm.getSquare()>0)
-        {
+        if (flagAccess && tableController.checkIdInTable("ice_rink", iceRinkForm.getId()) && tableController.checkAddressInTable("ice_rink", iceRinkForm.getAddress()) && iceRinkForm.getSquare() > 0) {
             iceRinkDAO.saveIceRink(iceRinkForm);
             return "redirect:/iceRink/list";
         }
@@ -839,7 +832,7 @@ public class MainController {
     public String saveEditIceRink(@ModelAttribute IceRink iceRink, Model model) throws SQLException {
         if (flagAccess == null)
             return "redirect:/title";
-        if (flagAccess && tableController.checkUpdateAddress("ice_rink", iceRink.getAddress(),globalBufferId)&&iceRink.getSquare()>0) {
+        if (flagAccess && tableController.checkUpdateAddress("ice_rink", iceRink.getAddress(), globalBufferId) && iceRink.getSquare() > 0) {
             iceRink.setId(globalBufferId);
             iceRinkDAO.updateIceRink(iceRink);
         }
@@ -930,8 +923,7 @@ public class MainController {
     public String saveTrainer(@ModelAttribute Trainer trainer, Model model) throws SQLException {
         if (flagAccess == null)
             return "redirect:/title";
-        if (flagAccess && tableController.checkIdInTable("trainer", trainer.getId())&&tableController.checkSportById(trainer.getSportId())&&tableController.checkPersonalKey("trainer",trainer.getName(),trainer.getPersonalKey()))
-        {
+        if (flagAccess && tableController.checkIdInTable("trainer", trainer.getId()) && tableController.checkSportById(trainer.getSportId()) && tableController.checkPersonalKey("trainer", trainer.getName(), trainer.getPersonalKey())) {
             trainerDAO.saveTrainer(trainer);
             return "redirect:/trainer/list";
         }
@@ -997,8 +989,7 @@ public class MainController {
     public String saveSport(@ModelAttribute Sport sport, Model model) throws SQLException {
         if (flagAccess == null)
             return "redirect:/title";
-        if (flagAccess && tableController.checkIdInTable("sport", sport.getId())&& tableController.checkNameInTable("sport", sport.getName()))
-        {
+        if (flagAccess && tableController.checkIdInTable("sport", sport.getId()) && tableController.checkNameInTable("sport", sport.getName())) {
             sportDAO.saveSport(sport);
             return "redirect:/sport/list";
         }
@@ -1019,7 +1010,7 @@ public class MainController {
     public String saveEditSport(@ModelAttribute Sport sport, Model model) throws SQLException {
         if (flagAccess == null)
             return "redirect:/title";
-        if (flagAccess&&tableController.checkNameInTable("sport",sport.getName())) {
+        if (flagAccess && tableController.checkNameInTable("sport", sport.getName())) {
             sport.setId(globalBufferId);
             sportDAO.updateSport(sport);
         }
@@ -1254,7 +1245,7 @@ public class MainController {
     public String saveEditClub(@ModelAttribute ClubForm clubForm, Model model) throws SQLException {
         if (flagAccess == null)
             return "redirect:/title";
-        if (flagAccess&&tableController.checkNameInTable("club",clubForm.getName())) {
+        if (flagAccess && tableController.checkNameInTable("club", clubForm.getName())) {
             clubForm.setId(globalBufferId);
             clubDAO.updateClub(clubForm);
         }
@@ -1394,10 +1385,7 @@ public class MainController {
         if (flagAccess == null)
             return "redirect:/title";
         if (flagAccess && tableController.checkSaveDataInTableHistory(historyForm)) {
-            double start = System.currentTimeMillis();
             historyDAO.saveHistory(historyForm);
-            double finish = System.currentTimeMillis();
-            System.out.println("Time(ms) : " + (finish - start));
             return "redirect:/organizesAndHistorySportsCompetitions/list";
         }
         return "redirect:/organizesAndHistorySportsCompetitions/add";
@@ -1420,7 +1408,7 @@ public class MainController {
     public String saveEditHistory(@ModelAttribute HistoryForm historyForm, Model model) throws SQLException {
         if (flagAccess == null)
             return "redirect:/title";
-        if (flagAccess&& tableController.checkAddressInAllTable(historyForm.getAddress())&&tableController.checkDateToPattern(historyForm.getDate())) {
+        if (flagAccess && tableController.checkAddressInAllTable(historyForm.getAddress()) && tableController.checkDateToPattern(historyForm.getDate())) {
             historyForm.setId(globalBufferId);
             historyDAO.updateHistory(historyForm);
         }

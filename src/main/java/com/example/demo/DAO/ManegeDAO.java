@@ -67,7 +67,7 @@ public class ManegeDAO {
     }
 
     public void deleteManege(int id) throws SQLException {
-        String query = "UPDATE organizes_and_history_sports_competitions SET address=\'null\'"+
+        String query = "UPDATE organizes_and_history_sports_competitions SET address=\'null\'" +
                 " WHERE address=\'" + getManegeById(id).getAddress() + "\' ;";
         stmt.executeUpdate(query);
         query = "DELETE FROM manege WHERE idmanege=" + id + ";";
@@ -78,7 +78,7 @@ public class ManegeDAO {
         String query = "UPDATE manege SET name=\'" + updatedManege.getName() + "\'" +
                 " WHERE idmanege=" + updatedManege.getId() + ";";
         stmt.executeUpdate(query);
-        query = "UPDATE organizes_and_history_sports_competitions SET address=\'" + updatedManege.getAddress()  +
+        query = "UPDATE organizes_and_history_sports_competitions SET address=\'" + updatedManege.getAddress() +
                 "\' WHERE address=\'" + getManegeById(updatedManege.getId()).getAddress() + "\';";
         stmt.executeUpdate(query);
         query = "UPDATE manege SET address=\'" + updatedManege.getAddress() + "\'" +

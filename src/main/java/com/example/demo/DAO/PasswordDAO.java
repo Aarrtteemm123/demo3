@@ -25,10 +25,10 @@ public class PasswordDAO {
         stmt = con.createStatement();
     }
 
-    public Boolean readPassword(String name,String password) throws SQLException {
-        if (!(name.equals("admin"))&&!(name.equals("user")))
+    public Boolean readPassword(String name, String password) throws SQLException {
+        if (!(name.equals("admin")) && !(name.equals("user")))
             return null;
-        String query = "SELECT * FROM access WHERE name=\'"+name+"\';";
+        String query = "SELECT * FROM access WHERE name=\'" + name + "\';";
         rs = stmt.executeQuery(query);
         rs.next();
         if (rs.getString(3).equals(password))

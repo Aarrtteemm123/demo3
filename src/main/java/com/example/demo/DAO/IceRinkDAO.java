@@ -54,11 +54,11 @@ public class IceRinkDAO {
         stmt.executeUpdate(query);
     }
 
-    public  IceRink getIceRinkById(int id) throws SQLException {
+    public IceRink getIceRinkById(int id) throws SQLException {
         String query = "SELECT * FROM ice_rink WHERE idice_rink=" + id + ";";
         rs = stmt.executeQuery(query);
         rs.next();
-        IceRink iceRink=new IceRink();
+        IceRink iceRink = new IceRink();
         iceRink.setId(rs.getInt(1));
         iceRink.setName(rs.getString(2));
         iceRink.setAddress(rs.getString(3));
@@ -67,7 +67,7 @@ public class IceRinkDAO {
     }
 
     public void deleteIceRink(int id) throws SQLException {
-        String query = "UPDATE organizes_and_history_sports_competitions SET address=\'null\'"+
+        String query = "UPDATE organizes_and_history_sports_competitions SET address=\'null\'" +
                 " WHERE address=\'" + getIceRinkById(id).getAddress() + "\' ;";
         stmt.executeUpdate(query);
         query = "DELETE FROM ice_rink WHERE idice_rink=" + id + ";";
@@ -75,17 +75,17 @@ public class IceRinkDAO {
     }
 
     public void updateIceRink(IceRink updateIceRink) throws SQLException {
-        String query = "UPDATE ice_rink SET name=\'" + updateIceRink .getName() + "\'" +
-                " WHERE idice_rink=" + updateIceRink .getId() + ";";
+        String query = "UPDATE ice_rink SET name=\'" + updateIceRink.getName() + "\'" +
+                " WHERE idice_rink=" + updateIceRink.getId() + ";";
         stmt.executeUpdate(query);
-        query = "UPDATE organizes_and_history_sports_competitions SET address=\'" + updateIceRink.getAddress()  +
+        query = "UPDATE organizes_and_history_sports_competitions SET address=\'" + updateIceRink.getAddress() +
                 "\' WHERE address=\'" + getIceRinkById(updateIceRink.getId()).getAddress() + "\';";
         stmt.executeUpdate(query);
-        query = "UPDATE ice_rink SET address=\'" + updateIceRink .getAddress() + "\'" +
-                " WHERE idice_rink=" + updateIceRink .getId() + ";";
+        query = "UPDATE ice_rink SET address=\'" + updateIceRink.getAddress() + "\'" +
+                " WHERE idice_rink=" + updateIceRink.getId() + ";";
         stmt.executeUpdate(query);
-        query = "UPDATE ice_rink SET square=" + updateIceRink.getSquare()  +
-                " WHERE idice_rink=" + updateIceRink .getId() + ";";
+        query = "UPDATE ice_rink SET square=" + updateIceRink.getSquare() +
+                " WHERE idice_rink=" + updateIceRink.getId() + ";";
         stmt.executeUpdate(query);
     }
 }

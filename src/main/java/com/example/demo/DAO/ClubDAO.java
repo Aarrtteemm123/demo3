@@ -33,13 +33,12 @@ public class ClubDAO {
     }
 
     private boolean checkSize() throws SQLException {
-        int size =0;
-        if (rs != null)
-        {
+        int size = 0;
+        if (rs != null) {
             rs.last();    // moves cursor to the last row
             size = rs.getRow(); // get row id
         }
-        if (size!=0)
+        if (size != 0)
             return true;
         return false;
     }
@@ -65,7 +64,7 @@ public class ClubDAO {
         Integer id = clubForm.getId();
         String name = clubForm.getName();
         Integer sportId = clubForm.getSportId();
-        String values = id + ",\'" + name + "\',"+sportId+","+0+","+0+","+0;
+        String values = id + ",\'" + name + "\'," + sportId + "," + 0 + "," + 0 + "," + 0;
         String query = "INSERT INTO club" + " VALUES (" + values + ");";
         stmt.executeUpdate(query);
     }
@@ -73,12 +72,11 @@ public class ClubDAO {
     public Club getClubById(int id) throws SQLException {
         String query = "SELECT * FROM club WHERE idclub=" + id + ";";
         rs = stmt.executeQuery(query);
-        TableController tableController=new TableController(url,user,password);
-        if (tableController.checkSize(rs))
-        {
+        TableController tableController = new TableController(url, user, password);
+        if (tableController.checkSize(rs)) {
             rs.beforeFirst();
             rs.next();
-            Club club=new Club();
+            Club club = new Club();
             club.setId(rs.getInt(1));
             club.setName(rs.getString(2));
             club.setSportId(rs.getInt(3));
@@ -93,12 +91,11 @@ public class ClubDAO {
     public Club getClubByName(String name) throws SQLException {
         String query = "SELECT * FROM club WHERE name=\'" + name + "\';";
         rs = stmt.executeQuery(query);
-        TableController tableController=new TableController(url,user,password);
-        if (tableController.checkSize(rs))
-        {
+        TableController tableController = new TableController(url, user, password);
+        if (tableController.checkSize(rs)) {
             rs.beforeFirst();
             rs.next();
-            Club club=new Club();
+            Club club = new Club();
             club.setId(rs.getInt(1));
             club.setName(rs.getString(2));
             club.setSportId(rs.getInt(3));
@@ -133,22 +130,19 @@ public class ClubDAO {
         stmt.executeUpdate(query);
     }
 
-    public ClubForm toClubForm(Club club) throws SQLException
-    {
-        ClubForm clubForm =new ClubForm();
+    public ClubForm toClubForm(Club club) throws SQLException {
+        ClubForm clubForm = new ClubForm();
         String query = "SELECT * FROM club WHERE idclub=" + club.getId() + ";";
         rs = stmt.executeQuery(query);
         rs.next();
         clubForm.setId(rs.getInt(1));
         clubForm.setName(rs.getString(2));
-        if (club.getSportId()!=0)
-        {
+        if (club.getSportId() != 0) {
             query = "SELECT * FROM sport WHERE idsport=" + club.getSportId() + ";";
             rs = stmt.executeQuery(query);
             rs.next();
             clubForm.setSport(rs.getString(2));
-        }
-        else
+        } else
             clubForm.setSport("null");
         clubForm.setCountFirstPlace(club.getCountFirstPlace());
         clubForm.setCountSecondPlace(club.getCountSecondPlace());
@@ -156,24 +150,21 @@ public class ClubDAO {
         return clubForm;
     }
 
-    public List<ClubForm> toClubForm(List<Club>clubList) throws SQLException {
-        List<ClubForm>clubFormList=new ArrayList<>(clubList.size());
-        for (int i = 0; i < clubList.size(); i++)
-        {
-            ClubForm clubForm =new ClubForm();
+    public List<ClubForm> toClubForm(List<Club> clubList) throws SQLException {
+        List<ClubForm> clubFormList = new ArrayList<>(clubList.size());
+        for (int i = 0; i < clubList.size(); i++) {
+            ClubForm clubForm = new ClubForm();
             String query = "SELECT * FROM club WHERE idclub=" + clubList.get(i).getId() + ";";
             rs = stmt.executeQuery(query);
             rs.next();
             clubForm.setId(rs.getInt(1));
             clubForm.setName(rs.getString(2));
-            if (clubList.get(i).getSportId()!=0)
-            {
+            if (clubList.get(i).getSportId() != 0) {
                 query = "SELECT * FROM sport WHERE idsport=" + clubList.get(i).getSportId() + ";";
                 rs = stmt.executeQuery(query);
                 rs.next();
                 clubForm.setSport(rs.getString(2));
-            }
-            else
+            } else
                 clubForm.setSport("null");
             clubForm.setCountFirstPlace(clubList.get(i).getCountFirstPlace());
             clubForm.setCountSecondPlace(clubList.get(i).getCountSecondPlace());
@@ -184,18 +175,16 @@ public class ClubDAO {
     }
 
     public Club toClub(ClubForm clubForm) throws SQLException {
-        Club club=new Club();
+        Club club = new Club();
         club.setId(clubForm.getId());
         club.setName(clubForm.getName());
         String query = "SELECT * FROM sport WHERE name=\'" + clubForm.getSport() + "\';";
         rs = stmt.executeQuery(query);
-        if (checkSize())
-        {
+        if (checkSize()) {
             rs.beforeFirst();
             rs.next();
             club.setSportId(rs.getInt(1));
-        }
-        else
+        } else
             club.setSportId(0);
         return club;
     }

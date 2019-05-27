@@ -30,40 +30,32 @@ public class SportsmenDAO {
         stmt = con.createStatement();
     }
 
-    public List<SportsmenForm> getSportsmenFormFromManySport(List<SportsmenForm> sportsmenFormList)
-    {
+    public List<SportsmenForm> getSportsmenFormFromManySport(List<SportsmenForm> sportsmenFormList) {
         List<SportsmenForm> result = new ArrayList<>(100);
         List<SportsmenForm> buffer = new ArrayList<>(100);
-        boolean fl=true;
-        for (int i = 0; i < sportsmenFormList.size(); i++)
-        {
+        boolean fl = true;
+        for (int i = 0; i < sportsmenFormList.size(); i++) {
             buffer.clear();
-            for (int j = i; j < sportsmenFormList.size(); j++)
-            {
-                if (sportsmenFormList.get(i).getPersonalKey()==
-                        sportsmenFormList.get(j).getPersonalKey()&&i!=j)
-                {
-                    if (fl)
-                    {
+            for (int j = i; j < sportsmenFormList.size(); j++) {
+                if (sportsmenFormList.get(i).getPersonalKey() ==
+                        sportsmenFormList.get(j).getPersonalKey() && i != j) {
+                    if (fl) {
                         buffer.add(sportsmenFormList.get(i));
-                        fl=false;
+                        fl = false;
                     }
                     buffer.add(sportsmenFormList.get(j));
                 }
             }
-            for (int j = 0; j < buffer.size(); j++)
-            {
-                if(!(buffer.get(0).getSport().equals(buffer.get(j).getSport())))
-                {
-                    for (int k = 0; k < buffer.size(); k++)
-                    {
+            for (int j = 0; j < buffer.size(); j++) {
+                if (!(buffer.get(0).getSport().equals(buffer.get(j).getSport()))) {
+                    for (int k = 0; k < buffer.size(); k++) {
                         if (!result.contains(buffer.get(k)))
                             result.add(buffer.get(k));
                     }
                     break;
                 }
             }
-            fl=true;
+            fl = true;
 
         }
         return result;
@@ -122,62 +114,53 @@ public class SportsmenDAO {
     }
 
     public void saveSportsmen(SportsmenForm sportsmenForm) throws SQLException {
-        Sportsmen sportsmen=toSportsmen(sportsmenForm);
+        Sportsmen sportsmen = toSportsmen(sportsmenForm);
         Integer id = sportsmen.getId();
         String name = sportsmen.getName();
         Integer personalKey = sportsmen.getPersonalKey();
         Integer sportId = sportsmen.getSportId();
         String sportCategory = sportsmen.getSportCategory();
-        Integer trainerId=sportsmen.getTrainerId();
-        Integer clubId=sportsmen.getClubId();
-        Integer numberOfParticipation=sportsmen.getNumberOfParticipation();
-        String values = id + ",\'" + name + "\'," + personalKey+","+sportId+",\'"
-                +sportCategory+"\',"+trainerId+","+clubId+","+
+        Integer trainerId = sportsmen.getTrainerId();
+        Integer clubId = sportsmen.getClubId();
+        Integer numberOfParticipation = sportsmen.getNumberOfParticipation();
+        String values = id + ",\'" + name + "\'," + personalKey + "," + sportId + ",\'"
+                + sportCategory + "\'," + trainerId + "," + clubId + "," +
                 numberOfParticipation;
         String query = "INSERT INTO sportsmen" + " VALUES (" + values + ");";
         stmt.executeUpdate(query);
     }
 
-    public List<SportsmenForm> toSportsmenForm(List<Sportsmen>sportsmenList) throws SQLException {
-        List<SportsmenForm>sportsmenFormList=new ArrayList<>(sportsmenList.size());
-        for (int i = 0; i < sportsmenList.size(); i++)
-        {
-            Sportsmen sportsmen=sportsmenList.get(i);
-            SportsmenForm sportsmenForm=new SportsmenForm();
+    public List<SportsmenForm> toSportsmenForm(List<Sportsmen> sportsmenList) throws SQLException {
+        List<SportsmenForm> sportsmenFormList = new ArrayList<>(sportsmenList.size());
+        for (int i = 0; i < sportsmenList.size(); i++) {
+            Sportsmen sportsmen = sportsmenList.get(i);
+            SportsmenForm sportsmenForm = new SportsmenForm();
             sportsmenForm.setId(sportsmen.getId());
             sportsmenForm.setName(sportsmen.getName());
             sportsmenForm.setPersonalKey(sportsmen.getPersonalKey());
-            if (sportsmen.getSportId()!=0)
-            {
-                String query="SELECT * FROM sport WHERE idsport="+sportsmen.getSportId()+";";
+            if (sportsmen.getSportId() != 0) {
+                String query = "SELECT * FROM sport WHERE idsport=" + sportsmen.getSportId() + ";";
                 rs = stmt.executeQuery(query);
                 rs.next();
                 sportsmenForm.setSport(rs.getString(2));
-            }
-            else
-            {
+            } else {
                 sportsmenForm.setSport("null");
             }
             sportsmenForm.setSportCategory(sportsmen.getSportCategory());
-            if (sportsmen.getTrainerId()!=0)
-            {
-                String query="SELECT * FROM trainer WHERE idtrainer="+sportsmen.getTrainerId()+";";
+            if (sportsmen.getTrainerId() != 0) {
+                String query = "SELECT * FROM trainer WHERE idtrainer=" + sportsmen.getTrainerId() + ";";
                 rs = stmt.executeQuery(query);
                 rs.next();
                 sportsmenForm.setTrainerName(rs.getString(2));
-            }
-            else
-            {
+            } else {
                 sportsmenForm.setTrainerName("null");
             }
-            if (sportsmen.getClubId()!=0)
-            {
-                String query="SELECT * FROM club WHERE idclub="+sportsmen.getClubId()+";";
+            if (sportsmen.getClubId() != 0) {
+                String query = "SELECT * FROM club WHERE idclub=" + sportsmen.getClubId() + ";";
                 rs = stmt.executeQuery(query);
                 rs.next();
                 sportsmenForm.setClubName(rs.getString(2));
-            }
-            else
+            } else
                 sportsmenForm.setClubName("null");
             sportsmenForm.setNumberOfParticipation(sportsmen.getNumberOfParticipation());
             sportsmenForm.setTrainerId(sportsmen.getTrainerId());
@@ -187,17 +170,17 @@ public class SportsmenDAO {
     }
 
     public Sportsmen toSportsmen(SportsmenForm sportsmenForm) throws SQLException {
-        Sportsmen sportsmen=new Sportsmen();
+        Sportsmen sportsmen = new Sportsmen();
         sportsmen.setId(sportsmenForm.getId());
         sportsmen.setName(sportsmenForm.getName());
         sportsmen.setPersonalKey(sportsmenForm.getPersonalKey());
-        String query="SELECT * FROM sport WHERE name= \'"+sportsmenForm.getSport()+"\';";
+        String query = "SELECT * FROM sport WHERE name= \'" + sportsmenForm.getSport() + "\';";
         rs = stmt.executeQuery(query);
         rs.next();
         sportsmen.setSportId(rs.getInt(1));
         sportsmen.setSportCategory(sportsmenForm.getSportCategory());
         sportsmen.setTrainerId(sportsmenForm.getTrainerId());
-        query="SELECT * FROM club WHERE name=\'"+sportsmenForm.getClubName()+"\' AND sportId="+sportsmen.getSportId()+";";
+        query = "SELECT * FROM club WHERE name=\'" + sportsmenForm.getClubName() + "\' AND sportId=" + sportsmen.getSportId() + ";";
         rs = stmt.executeQuery(query);
         rs.next();
         sportsmen.setClubId(rs.getInt(1));

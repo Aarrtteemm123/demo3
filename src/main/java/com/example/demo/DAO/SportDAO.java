@@ -55,12 +55,11 @@ public class SportDAO {
     public Sport getSportById(int id) throws SQLException {
         String query = "SELECT * FROM sport WHERE idsport=" + id + ";";
         rs = stmt.executeQuery(query);
-        TableController tableController=new TableController(url,user,password);
-        if (tableController.checkSize(rs))
-        {
+        TableController tableController = new TableController(url, user, password);
+        if (tableController.checkSize(rs)) {
             rs.beforeFirst();
             rs.next();
-            Sport sport=new Sport();
+            Sport sport = new Sport();
             sport.setId(rs.getInt(1));
             sport.setName(rs.getString(2));
             return sport;
@@ -70,10 +69,10 @@ public class SportDAO {
 
     public void deleteSport(int id) throws SQLException {
         String query = "UPDATE trainer SET sportId=0" +
-                " WHERE sportId=" + id+ ";";
+                " WHERE sportId=" + id + ";";
         stmt.executeUpdate(query);
         query = "UPDATE sportsmen SET sportId=0" +
-                " WHERE sportId=" + id+ ";";
+                " WHERE sportId=" + id + ";";
         stmt.executeUpdate(query);
         query = "UPDATE club SET sportId=0" +
                 " WHERE sportId=" + id + ";";

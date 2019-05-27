@@ -51,7 +51,7 @@ public class TrackDAO {
         String address = trackForm.getAddress();
         String typeOfCover = trackForm.getTypeOfCover();
         Integer lengthTrack = trackForm.getLengthTrack();
-        String values = id + ",\'" + name + "\'" + ",\'" + address + "\'" + ",\'" + typeOfCover+"\',"+lengthTrack;
+        String values = id + ",\'" + name + "\'" + ",\'" + address + "\'" + ",\'" + typeOfCover + "\'," + lengthTrack;
         String query = "INSERT INTO track" + " VALUES (" + values + ");";
         stmt.executeUpdate(query);
     }
@@ -60,7 +60,7 @@ public class TrackDAO {
         String query = "SELECT * FROM track WHERE idtrack=" + id + ";";
         rs = stmt.executeQuery(query);
         rs.next();
-        Track track=new Track();
+        Track track = new Track();
         track.setId(rs.getInt(1));
         track.setName(rs.getString(2));
         track.setAddress(rs.getString(3));
@@ -70,7 +70,7 @@ public class TrackDAO {
     }
 
     public void deleteTrack(int id) throws SQLException {
-        String query = "UPDATE organizes_and_history_sports_competitions SET address=\'null\'"+
+        String query = "UPDATE organizes_and_history_sports_competitions SET address=\'null\'" +
                 " WHERE address=\'" + getTrackById(id).getAddress() + "\' ;";
         stmt.executeUpdate(query);
         query = "DELETE FROM track WHERE idtrack=" + id + ";";
@@ -81,16 +81,16 @@ public class TrackDAO {
         String query = "UPDATE track SET name=\'" + updateTrack.getName() + "\'" +
                 " WHERE idtrack=" + updateTrack.getId() + ";";
         stmt.executeUpdate(query);
-        query = "UPDATE organizes_and_history_sports_competitions SET address=\'" + updateTrack.getAddress()  +
+        query = "UPDATE organizes_and_history_sports_competitions SET address=\'" + updateTrack.getAddress() +
                 "\' WHERE address=\'" + getTrackById(updateTrack.getId()).getAddress() + "\';";
         stmt.executeUpdate(query);
         query = "UPDATE track SET address=\'" + updateTrack.getAddress() + "\'" +
                 " WHERE idtrack=" + updateTrack.getId() + ";";
         stmt.executeUpdate(query);
-        query = "UPDATE track SET typeOfCover=\'" + updateTrack.getTypeOfCover()+"\'"  +
+        query = "UPDATE track SET typeOfCover=\'" + updateTrack.getTypeOfCover() + "\'" +
                 " WHERE idtrack=" + updateTrack.getId() + ";";
         stmt.executeUpdate(query);
-        query = "UPDATE track SET lenghtTrack_m=" + updateTrack.getLengthTrack()  +
+        query = "UPDATE track SET lenghtTrack_m=" + updateTrack.getLengthTrack() +
                 " WHERE idtrack=" + updateTrack.getId() + ";";
         stmt.executeUpdate(query);
     }

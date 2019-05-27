@@ -4,7 +4,7 @@ public class Password {
     private String password;
 
     public Password() {
-        password=new String();
+        password = new String();
     }
 
     public Password(String password) {

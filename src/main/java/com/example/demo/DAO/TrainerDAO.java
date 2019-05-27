@@ -50,14 +50,12 @@ public class TrainerDAO {
     public void saveTrainer(Trainer trainerForm) throws SQLException {
         String query = "SELECT * FROM sport WHERE idsport=" + trainerForm.getSportId() + ";";
         rs = stmt.executeQuery(query);
-        int size =0;
-        if (rs != null)
-        {
+        int size = 0;
+        if (rs != null) {
             rs.last();    // moves cursor to the last row
             size = rs.getRow(); // get row id
         }
-        if (size!=0)
-        {
+        if (size != 0) {
             Integer id = trainerForm.getId();
             String name = trainerForm.getName();
             Integer personalKey = trainerForm.getPersonalKey();
@@ -71,12 +69,11 @@ public class TrainerDAO {
     public Trainer getTrainerById(int id) throws SQLException {
         String query = "SELECT * FROM trainer WHERE idtrainer=" + id + ";";
         rs = stmt.executeQuery(query);
-        TableController tableController=new TableController(url,user,password);
-        if (tableController.checkSize(rs))
-        {
+        TableController tableController = new TableController(url, user, password);
+        if (tableController.checkSize(rs)) {
             rs.beforeFirst();
             rs.next();
-            Trainer trainer=new Trainer();
+            Trainer trainer = new Trainer();
             trainer.setId(rs.getInt(1));
             trainer.setName(rs.getString(2));
             trainer.setPersonalKey(rs.getInt(3));
@@ -96,25 +93,21 @@ public class TrainerDAO {
     }
 
     public void updateTrainer(Trainer updateTrainer) throws SQLException {
-        String query = "UPDATE trainer SET name=\'" + updateTrainer .getName() + "\'" +
-                " WHERE idtrainer=" + updateTrainer .getId() + ";";
+        String query = "UPDATE trainer SET name=\'" + updateTrainer.getName() + "\'" +
+                " WHERE idtrainer=" + updateTrainer.getId() + ";";
         stmt.executeUpdate(query);
     }
 
     public List<TrainerForm> toTrainerFrom(List<Trainer> trainers) throws SQLException {
-        List<TrainerForm> trainerFormList=new ArrayList<>(trainers.size());
-        for (int i = 0; i < trainers.size(); i++)
-        {
-            TrainerForm tempTrainerForm=new TrainerForm();
-            if (trainers.get(i).getSportId()!=0)
-            {
+        List<TrainerForm> trainerFormList = new ArrayList<>(trainers.size());
+        for (int i = 0; i < trainers.size(); i++) {
+            TrainerForm tempTrainerForm = new TrainerForm();
+            if (trainers.get(i).getSportId() != 0) {
                 String query = "SELECT * FROM sport WHERE idsport=" + trainers.get(i).getSportId() + ";";
                 rs = stmt.executeQuery(query);
                 rs.next();
                 tempTrainerForm.setSport(rs.getString(2));
-            }
-            else
-            {
+            } else {
                 tempTrainerForm.setSport("null");
             }
             tempTrainerForm.setId(trainers.get(i).getId());

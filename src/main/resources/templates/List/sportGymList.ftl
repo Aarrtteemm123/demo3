@@ -3,8 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <link href="/static/main.css" rel="stylesheet">
+    <title>List</title>
     <#--<link rel="stylesheet" href="<@spring.url '/css/style.css/'>">-->
     <style>
         body {
@@ -15,12 +14,6 @@
             position: absolute; /* Абсолютное позиционирование */
             top: 200px;
             left: 480px;
-        }
-
-        .tableList {
-            position: absolute; /* Абсолютное позиционирование */
-            top: 300px;
-            left: 510px;
         }
 
         .input.input {
@@ -47,8 +40,7 @@
             font-weight: bold;
         }
 
-        .tableButtonList
-        {
+        .tableButtonList {
             position: absolute; /* Абсолютное позиционирование */
             top: 80px;
             left: 185px;
@@ -103,6 +95,7 @@
         .table_dark tr:hover td {
             text-decoration: underline;
         }
+
         input.button[type=submit] {
             position: relative;
             display: inline-block;
@@ -111,29 +104,29 @@
             line-height: 60%;
             font-size: 90%;
             font-weight: 700;
-            color: rgb(209,209,217);
+            color: rgb(209, 209, 217);
             text-decoration: none;
-            text-shadow: 0 -1px 2px rgba(0,0,0,.2);
+            text-shadow: 0 -1px 2px rgba(0, 0, 0, .2);
             padding: .5em 1em;
             outline: none;
             border-radius: 3px;
-            background: linear-gradient(rgb(110,112,120), rgb(81,81,86)) rgb(110,112,120);
-            box-shadow:
-                    0 1px rgba(255,255,255,.2) inset,
-                    0 3px 5px rgba(0,1,6,.5),
-                    0 0 1px 1px rgba(0,1,6,.2);
+            background: linear-gradient(rgb(110, 112, 120), rgb(81, 81, 86)) rgb(110, 112, 120);
+            box-shadow: 0 1px rgba(255, 255, 255, .2) inset,
+            0 3px 5px rgba(0, 1, 6, .5),
+            0 0 1px 1px rgba(0, 1, 6, .2);
             transition: .2s ease-in-out;
         }
+
         input.button:hover:not(:active) {
-            background: linear-gradient(rgb(126,126,134), rgb(70,71,76)) rgb(126,126,134);
+            background: linear-gradient(rgb(126, 126, 134), rgb(70, 71, 76)) rgb(126, 126, 134);
         }
+
         input.button:active {
             top: 1px;
-            background: linear-gradient(rgb(76,77,82), rgb(56,57,62)) rgb(76,77,82);
-            box-shadow:
-                    0 0 1px rgba(0,0,0,.5) inset,
-                    0 2px 3px rgba(0,0,0,.5) inset,
-                    0 1px 1px rgba(255,255,255,.1);
+            background: linear-gradient(rgb(76, 77, 82), rgb(56, 57, 62)) rgb(76, 77, 82);
+            box-shadow: 0 0 1px rgba(0, 0, 0, .5) inset,
+            0 2px 3px rgba(0, 0, 0, .5) inset,
+            0 1px 1px rgba(255, 255, 255, .1);
         }
     </style>
 </head>
@@ -165,8 +158,10 @@
         <td><a href="/queries/list" style="color: blue;text-decoration: none">Queries</a></td>
     </tr>
 </table>
-<a style="color: black; font-family:sans-serif,impact;position: absolute;left: 440px;top: 340px;" href="/sportGym/list">All sport gym</a>
-<a style="color: black; font-family:sans-serif,impact;position: absolute;left: 440px;top: 370px;" href="/sportGym/add">Add sport gym</a>
+<a style="color: black; font-family:sans-serif,impact;position: absolute;left: 440px;top: 340px;" href="/sportGym/list">All
+    sport gym</a>
+<a style="color: black; font-family:sans-serif,impact;position: absolute;left: 440px;top: 370px;" href="/sportGym/add">Add
+    sport gym</a>
 <form class="inputForm" action="/sportGym/list" method="POST">
     <div class="field">
         <label for="num">Simulators (<)</label>

@@ -52,7 +52,7 @@ public class SwimmingPoolDAO {
         Integer depth = swimmingPoolForm.getDepth();
         Integer numberOfTower = swimmingPoolForm.getNumberOfTower();
         String values = id + ",\'" + name + "\'" + ",\'" + address + "\'" + "," +
-                depth+","+numberOfTower;
+                depth + "," + numberOfTower;
         String query = "INSERT INTO swimming_pool" + " VALUES (" + values + ");";
         stmt.executeUpdate(query);
     }
@@ -61,7 +61,7 @@ public class SwimmingPoolDAO {
         String query = "SELECT * FROM swimming_pool WHERE idswimming_pool=" + id + ";";
         rs = stmt.executeQuery(query);
         rs.next();
-        SwimmingPool swimmingPool=new SwimmingPool();
+        SwimmingPool swimmingPool = new SwimmingPool();
         swimmingPool.setId(rs.getInt(1));
         swimmingPool.setName(rs.getString(2));
         swimmingPool.setAddress(rs.getString(3));
@@ -71,7 +71,7 @@ public class SwimmingPoolDAO {
     }
 
     public void deleteSwimmingPool(int id) throws SQLException {
-        String query = "UPDATE organizes_and_history_sports_competitions SET address=\'null\'"+
+        String query = "UPDATE organizes_and_history_sports_competitions SET address=\'null\'" +
                 " WHERE address=\'" + getSwimmingPoolById(id).getAddress() + "\' ;";
         stmt.executeUpdate(query);
         query = "DELETE FROM swimming_pool WHERE idswimming_pool=" + id + ";";
@@ -82,16 +82,16 @@ public class SwimmingPoolDAO {
         String query = "UPDATE swimming_pool SET name=\'" + updateSwimmingPool.getName() + "\'" +
                 " WHERE idswimming_pool=" + updateSwimmingPool.getId() + ";";
         stmt.executeUpdate(query);
-        query = "UPDATE organizes_and_history_sports_competitions SET address=\'" + updateSwimmingPool.getAddress()  +
+        query = "UPDATE organizes_and_history_sports_competitions SET address=\'" + updateSwimmingPool.getAddress() +
                 "\' WHERE address=\'" + getSwimmingPoolById(updateSwimmingPool.getId()).getAddress() + "\';";
         stmt.executeUpdate(query);
         query = "UPDATE swimming_pool SET address=\'" + updateSwimmingPool.getAddress() + "\'" +
                 " WHERE idswimming_pool=" + updateSwimmingPool.getId() + ";";
         stmt.executeUpdate(query);
-        query = "UPDATE swimming_pool SET depth=" + updateSwimmingPool.getDepth()  +
+        query = "UPDATE swimming_pool SET depth=" + updateSwimmingPool.getDepth() +
                 " WHERE idswimming_pool=" + updateSwimmingPool.getId() + ";";
         stmt.executeUpdate(query);
-        query = "UPDATE swimming_pool SET numberOfTower=" + updateSwimmingPool.getNumberOfTower()  +
+        query = "UPDATE swimming_pool SET numberOfTower=" + updateSwimmingPool.getNumberOfTower() +
                 " WHERE idswimming_pool=" + updateSwimmingPool.getId() + ";";
         stmt.executeUpdate(query);
     }

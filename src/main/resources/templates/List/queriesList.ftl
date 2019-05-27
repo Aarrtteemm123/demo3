@@ -3,20 +3,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <link href="/static/main.css" rel="stylesheet">
+    <title>List</title>
     <#--<link rel="stylesheet" href="<@spring.url '/css/style.css/'>">-->
     <style>
-        body{
+        body {
             background: #47e7db;
         }
-        .tableList {
-            position: absolute; /* Абсолютное позиционирование */
-            top: 200px;
-            left: 520px;
-        }
-        .tableButtonList
-        {
+
+        .tableButtonList {
             position: absolute; /* Абсолютное позиционирование */
             top: 80px;
             left: 185px;
@@ -25,19 +19,14 @@
             color: blueviolet;
             font-size: 20px;
         }
-        .textTitle
-        {
+
+        .textTitle {
             position: absolute; /* Абсолютное позиционирование */
             left: 700px;
             top: 10px;
             color: darkred;
         }
 
-        .queriesTable {
-            position: absolute; /* Абсолютное позиционирование */
-            top: 250px;
-            left: 530px;
-        }
         .table_dark {
             position: absolute; /* Абсолютное позиционирование */
             top: 300px;
@@ -50,31 +39,39 @@
             margin: 10px;
             border-radius: 10px;
         }
+
         .table_dark th {
             color: #EDB749;
             border-bottom: 1px solid #37B5A5;
             padding: 12px 17px;
         }
+
         .table_dark td {
             color: #CAD4D6;
             border-bottom: 1px solid #37B5A5;
-            border-right:1px solid #37B5A5;
+            border-right: 1px solid #37B5A5;
             padding: 7px 17px;
         }
+
         .table_dark tr:last-child td {
             border-bottom: none;
         }
+
         .table_dark td:last-child {
             border-right: none;
         }
+
         .table_dark tr:hover td {
             text-decoration: underline;
         }
     </style>
 </head>
 <body>
-<h3 style="font-family:sans-serif,impact; color: darkred; position: absolute;left: 30px;top: 5px;">Status: ${status.status}</h3>
-<h2><a href="/title" style="font-family:sans-serif,impact;color: darkred;position: absolute;right: 50px;top: 20px;text-decoration: none">Exit</a></h2>
+<h3 style="font-family:sans-serif,impact; color: darkred; position: absolute;left: 30px;top: 5px;">
+    Status: ${status.status}</h3>
+<h2><a href="/title"
+       style="font-family:sans-serif,impact;color: darkred;position: absolute;right: 50px;top: 20px;text-decoration: none">Exit</a>
+</h2>
 <h2 class="textTitle">Tables</h2>
 <table class="tableButtonList">
     <tr>
@@ -92,7 +89,8 @@
         <td><a href="/sport/list" style="color: blue;text-decoration: none">Sport</a></td>
         <td><a href="/sportsmen/list" style="color: blue;text-decoration: none">Sportsmen</a></td>
         <td><a href="/club/list" style="color: blue;text-decoration: none">Club</a></td>
-        <td><a href="/organizesAndHistorySportsCompetitions/list" style="color: blue;text-decoration: none">History</a></td>
+        <td><a href="/organizesAndHistorySportsCompetitions/list" style="color: blue;text-decoration: none">History</a>
+        </td>
         <td><a href="/queries/list" style="color: blue;text-decoration: none">Queries</a></td>
     </tr>
 </table>
