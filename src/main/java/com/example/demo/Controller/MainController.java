@@ -47,8 +47,7 @@ public class MainController {
     private List<TrainerForm> bufferTrainerFormList = new ArrayList<>();
     private List<HistoryForm> bufferHistoryFormList = new ArrayList<>();
 
-    public MainController() throws SQLException {
-    }
+    public MainController() throws SQLException { }
 
     public Model setAccess(Model model) {
         if (flagAccess) {
