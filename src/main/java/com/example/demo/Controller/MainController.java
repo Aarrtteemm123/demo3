@@ -15,8 +15,8 @@ import java.util.List;
 public class MainController {
     //mysql://bcb531111f11df:3832f169@us-cdbr-iron-east-02.cleardb.net/heroku_e84d4f31db6940a?reconnect=true
     private final String url = "jdbc:mysql://us-cdbr-iron-east-02.cleardb.net/heroku_e84d4f31db6940a?reconnect=true";
-    private final String user = "root";
-    private final String passwordDb = "2580";
+    private final String user = "bcb531111f11df";
+    private final String passwordDb = "3832f169";
     private int globalBufferId = 0;
     private boolean flagFilter = false;
     private Boolean flagAccess = null;
