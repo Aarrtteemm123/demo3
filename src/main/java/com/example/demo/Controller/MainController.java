@@ -13,10 +13,10 @@ import java.util.List;
 
 @Controller
 public class MainController {
-
-    private final String url = "mysql://bcb531111f11df:3832f169@us-cdbr-iron-east-02.cleardb.net/heroku_e84d4f31db6940a?reconnect=true";
-    private final String user = "bcb531111f11df";
-    private final String passwordDb = "3832f169";
+    //mysql://bcb531111f11df:3832f169@us-cdbr-iron-east-02.cleardb.net/heroku_e84d4f31db6940a?reconnect=true
+    private final String url = "jdbc:mysql://us-cdbr-iron-east-02.cleardb.net/heroku_e84d4f31db6940a?reconnect=true";
+    private final String user = "root";
+    private final String passwordDb = "2580";
     private int globalBufferId = 0;
     private boolean flagFilter = false;
     private Boolean flagAccess = null;
@@ -47,7 +47,8 @@ public class MainController {
     private List<TrainerForm> bufferTrainerFormList = new ArrayList<>();
     private List<HistoryForm> bufferHistoryFormList = new ArrayList<>();
 
-    public MainController() throws SQLException { }
+    public MainController() throws SQLException {
+    }
 
     public Model setAccess(Model model) {
         if (flagAccess) {
@@ -1369,7 +1370,7 @@ public class MainController {
         model.addAttribute("historyFormList", historyFormList);
         return "List/organizesAndHistorySportsCompetitionsList";
     }
-//mysql://bcb531111f11df:3832f169@us-cdbr-iron-east-02.cleardb.net/heroku_e84d4f31db6940a?reconnect=true
+
     @RequestMapping(value = "/organizesAndHistorySportsCompetitions/add", method = RequestMethod.GET)
     public String addHistory(Model model) {
         if (flagAccess == null)
