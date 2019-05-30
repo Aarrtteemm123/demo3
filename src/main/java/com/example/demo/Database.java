@@ -4,6 +4,8 @@ import com.example.demo.Controller.TableController;
 import com.example.demo.Model.*;
 import com.example.demo.tableForm.ClubForm;
 import com.example.demo.tableForm.HistoryForm;
+import com.example.demo.tableForm.SportsmenForm;
+import com.example.demo.tableForm.TrainerForm;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -616,5 +618,567 @@ public class Database {
         if (rs.getString(3).equals(password))
             return true;
         return false;
+    }
+
+    public List<Sport> getAllSport() throws SQLException {
+        List<Sport> sports = new ArrayList<>();
+        String query = "SELECT * FROM sport;";
+        rs = stmt.executeQuery(query);
+        while (rs.next()) {
+            Sport tempSport = new Sport();
+            tempSport.setId(rs.getInt(1));
+            tempSport.setName(rs.getString(2));
+            sports.add(tempSport);
+        }
+        return sports;
+    }
+
+    public void saveSport(Sport sportForm) throws SQLException {
+        Integer id = sportForm.getId();
+        String name = sportForm.getName();
+        String values = id + ",\'" + name + "\'";
+        String query = "INSERT INTO sport" + " VALUES (" + values + ");";
+        stmt.executeUpdate(query);
+    }
+
+    public Sport getSportById(int id) throws SQLException {
+        String query = "SELECT * FROM sport WHERE idsport=" + id + ";";
+        rs = stmt.executeQuery(query);
+        TableController tableController = new TableController(url, user, password);
+        if (tableController.checkSize(rs)) {
+            rs.beforeFirst();
+            rs.next();
+            Sport sport = new Sport();
+            sport.setId(rs.getInt(1));
+            sport.setName(rs.getString(2));
+            return sport;
+        }
+        return new Sport();
+    }
+
+    public void deleteSport(int id) throws SQLException {
+        String query = "UPDATE trainer SET sportId=0" +
+                " WHERE sportId=" + id + ";";
+        stmt.executeUpdate(query);
+        query = "UPDATE sportsmen SET sportId=0" +
+                " WHERE sportId=" + id + ";";
+        stmt.executeUpdate(query);
+        query = "UPDATE club SET sportId=0" +
+                " WHERE sportId=" + id + ";";
+        stmt.executeUpdate(query);
+        query = "UPDATE organizes_and_history_sports_competitions SET sportId=0" +
+                " WHERE sportId=" + id + ";";
+        stmt.executeUpdate(query);
+        query = "DELETE FROM sport WHERE idsport=" + id + ";";
+        stmt.executeUpdate(query);
+    }
+
+    public void updateSport(Sport updateSport) throws SQLException {
+        String query = "UPDATE sport SET name=\'" + updateSport.getName() + "\'" +
+                " WHERE idsport=" + updateSport.getId() + ";";
+        stmt.executeUpdate(query);
+    }
+    public List<SportGym> getAllSportGym() throws SQLException {
+        List<SportGym> sportGyms = new ArrayList<>();
+        String query = "SELECT * FROM sport_gym;";
+        rs = stmt.executeQuery(query);
+        while (rs.next()) {
+            SportGym tempSportGym = new SportGym();
+            tempSportGym.setId(rs.getInt(1));
+            tempSportGym.setName(rs.getString(2));
+            tempSportGym.setAddress(rs.getString(3));
+            tempSportGym.setNumberOfSimulators(rs.getInt(4));
+            sportGyms.add(tempSportGym);
+        }
+        return sportGyms;
+    }
+
+    public void saveSportGym(SportGym sportGymForm) throws SQLException {
+        Integer id = sportGymForm.getId();
+        String name = sportGymForm.getName();
+        String address = sportGymForm.getAddress();
+        Integer numberOfSimulators = sportGymForm.getNumberOfSimulators();
+        String values = id + ",\'" + name + "\'" + ",\'" + address + "\'" + "," + numberOfSimulators + " ";
+        String query = "INSERT INTO sport_gym" + " VALUES (" + values + ");";
+        stmt.executeUpdate(query);
+    }
+
+    public SportGym getSportGymById(int id) throws SQLException {
+        String query = "SELECT * FROM sport_gym WHERE idsport_gym=" + id + ";";
+        rs = stmt.executeQuery(query);
+        rs.next();
+        SportGym sportGym = new SportGym();
+        sportGym.setId(rs.getInt(1));
+        sportGym.setName(rs.getString(2));
+        sportGym.setAddress(rs.getString(3));
+        sportGym.setNumberOfSimulators(rs.getInt(4));
+        return sportGym;
+    }
+
+    public void deleteSportGym(int id) throws SQLException {
+        String query = "UPDATE organizes_and_history_sports_competitions SET address=\'null\'" +
+                " WHERE address=\'" + getSportGymById(id).getAddress() + "\' ;";
+        stmt.executeUpdate(query);
+        query = "DELETE FROM sport_gym WHERE idsport_gym=" + id + ";";
+        stmt.executeUpdate(query);
+    }
+
+    public void updateSportGym(SportGym updateSportGym) throws SQLException {
+        String query = "UPDATE sport_gym SET name=\'" + updateSportGym.getName() + "\'" +
+                " WHERE idsport_gym=" + updateSportGym.getId() + ";";
+        stmt.executeUpdate(query);
+        query = "UPDATE organizes_and_history_sports_competitions SET address=\'" + updateSportGym.getAddress() +
+                "\' WHERE address=\'" + getSportGymById(updateSportGym.getId()).getAddress() + "\';";
+        stmt.executeUpdate(query);
+        query = "UPDATE sport_gym SET address=\'" + updateSportGym.getAddress() + "\'" +
+                " WHERE idsport_gym=" + updateSportGym.getId() + ";";
+        stmt.executeUpdate(query);
+        query = "UPDATE sport_gym SET numberOfSimulators=" + updateSportGym.getNumberOfSimulators() +
+                " WHERE idsport_gym=" + updateSportGym.getId() + ";";
+        stmt.executeUpdate(query);
+    }
+
+    public List<SportsmenForm> getSportsmenFormFromManySport(List<SportsmenForm> sportsmenFormList) {
+        List<SportsmenForm> result = new ArrayList<>(100);
+        List<SportsmenForm> buffer = new ArrayList<>(100);
+        boolean fl = true;
+        for (int i = 0; i < sportsmenFormList.size(); i++) {
+            buffer.clear();
+            for (int j = i; j < sportsmenFormList.size(); j++) {
+                if (sportsmenFormList.get(i).getPersonalKey() ==
+                        sportsmenFormList.get(j).getPersonalKey() && i != j) {
+                    if (fl) {
+                        buffer.add(sportsmenFormList.get(i));
+                        fl = false;
+                    }
+                    buffer.add(sportsmenFormList.get(j));
+                }
+            }
+            for (int j = 0; j < buffer.size(); j++) {
+                if (!(buffer.get(0).getSport().equals(buffer.get(j).getSport()))) {
+                    for (int k = 0; k < buffer.size(); k++) {
+                        if (!result.contains(buffer.get(k)))
+                            result.add(buffer.get(k));
+                    }
+                    break;
+                }
+            }
+            fl = true;
+
+        }
+        return result;
+    }
+
+    public List<Sportsmen> getAllSportsmen() throws SQLException {
+        List<Sportsmen> sportsmens = new ArrayList<>();
+        String query = "SELECT * FROM sportsmen;";
+        rs = stmt.executeQuery(query);
+        while (rs.next()) {
+            Sportsmen tempSportsmen = new Sportsmen();
+            tempSportsmen.setId(rs.getInt(1));
+            tempSportsmen.setName(rs.getString(2));
+            tempSportsmen.setPersonalKey(rs.getInt(3));
+            tempSportsmen.setSportId(rs.getInt(4));
+            tempSportsmen.setSportCategory(rs.getString(5));
+            tempSportsmen.setTrainerId(rs.getInt(6));
+            tempSportsmen.setClubId(rs.getInt(7));
+            tempSportsmen.setNumberOfParticipation(rs.getInt(8));
+            sportsmens.add(tempSportsmen);
+        }
+        return sportsmens;
+    }
+
+    public Sportsmen getSportsmenById(int id) throws SQLException {
+        String query = "SELECT * FROM sportsmen WHERE idsportsmen=" + id + ";";
+        rs = stmt.executeQuery(query);
+        rs.next();
+        Sportsmen stadium = new Sportsmen();
+        stadium.setId(rs.getInt(1));
+        stadium.setName(rs.getString(2));
+        stadium.setPersonalKey(rs.getInt(3));
+        stadium.setSportId(rs.getInt(4));
+        stadium.setSportCategory(rs.getString(5));
+        stadium.setTrainerId(rs.getInt(6));
+        stadium.setClubId(rs.getInt(7));
+        stadium.setNumberOfParticipation(rs.getInt(8));
+        return stadium;
+    }
+
+    public void deleteSportsmen(int id) throws SQLException {
+        String query = "DELETE FROM sportsmen WHERE idsportsmen=" + id + ";";
+        stmt.executeUpdate(query);
+    }
+
+    public void updateSportsmen(SportsmenForm sportsmenForm) throws SQLException {
+        String query = "UPDATE sportsmen SET name=\'" + sportsmenForm.getName() + "\'" +
+                " WHERE idsportsmen=" + sportsmenForm.getId() + ";";
+        stmt.executeUpdate(query);
+        query = "UPDATE sportsmen SET sport_category=\'" + sportsmenForm.getSportCategory() + "\'" +
+                " WHERE idsportsmen=" + sportsmenForm.getId() + ";";
+        stmt.executeUpdate(query);
+        query = "UPDATE sportsmen SET numberOfParticipation=" + sportsmenForm.getNumberOfParticipation() +
+                " WHERE idsportsmen=" + sportsmenForm.getId() + ";";
+        stmt.executeUpdate(query);
+    }
+
+    public void saveSportsmen(SportsmenForm sportsmenForm) throws SQLException {
+        Sportsmen sportsmen = toSportsmen(sportsmenForm);
+        Integer id = sportsmen.getId();
+        String name = sportsmen.getName();
+        Integer personalKey = sportsmen.getPersonalKey();
+        Integer sportId = sportsmen.getSportId();
+        String sportCategory = sportsmen.getSportCategory();
+        Integer trainerId = sportsmen.getTrainerId();
+        Integer clubId = sportsmen.getClubId();
+        Integer numberOfParticipation = sportsmen.getNumberOfParticipation();
+        String values = id + ",\'" + name + "\'," + personalKey + "," + sportId + ",\'"
+                + sportCategory + "\'," + trainerId + "," + clubId + "," +
+                numberOfParticipation;
+        String query = "INSERT INTO sportsmen" + " VALUES (" + values + ");";
+        stmt.executeUpdate(query);
+    }
+
+    public List<SportsmenForm> toSportsmenForm(List<Sportsmen> sportsmenList) throws SQLException {
+        List<SportsmenForm> sportsmenFormList = new ArrayList<>(sportsmenList.size());
+        for (int i = 0; i < sportsmenList.size(); i++) {
+            Sportsmen sportsmen = sportsmenList.get(i);
+            SportsmenForm sportsmenForm = new SportsmenForm();
+            sportsmenForm.setId(sportsmen.getId());
+            sportsmenForm.setName(sportsmen.getName());
+            sportsmenForm.setPersonalKey(sportsmen.getPersonalKey());
+            if (sportsmen.getSportId() != 0) {
+                String query = "SELECT * FROM sport WHERE idsport=" + sportsmen.getSportId() + ";";
+                rs = stmt.executeQuery(query);
+                rs.next();
+                sportsmenForm.setSport(rs.getString(2));
+            } else {
+                sportsmenForm.setSport("null");
+            }
+            sportsmenForm.setSportCategory(sportsmen.getSportCategory());
+            if (sportsmen.getTrainerId() != 0) {
+                String query = "SELECT * FROM trainer WHERE idtrainer=" + sportsmen.getTrainerId() + ";";
+                rs = stmt.executeQuery(query);
+                rs.next();
+                sportsmenForm.setTrainerName(rs.getString(2));
+            } else {
+                sportsmenForm.setTrainerName("null");
+            }
+            if (sportsmen.getClubId() != 0) {
+                String query = "SELECT * FROM club WHERE idclub=" + sportsmen.getClubId() + ";";
+                rs = stmt.executeQuery(query);
+                rs.next();
+                sportsmenForm.setClubName(rs.getString(2));
+            } else
+                sportsmenForm.setClubName("null");
+            sportsmenForm.setNumberOfParticipation(sportsmen.getNumberOfParticipation());
+            sportsmenForm.setTrainerId(sportsmen.getTrainerId());
+            sportsmenFormList.add(sportsmenForm);
+        }
+        return sportsmenFormList;
+    }
+
+    public Sportsmen toSportsmen(SportsmenForm sportsmenForm) throws SQLException {
+        Sportsmen sportsmen = new Sportsmen();
+        sportsmen.setId(sportsmenForm.getId());
+        sportsmen.setName(sportsmenForm.getName());
+        sportsmen.setPersonalKey(sportsmenForm.getPersonalKey());
+        String query = "SELECT * FROM sport WHERE name= \'" + sportsmenForm.getSport() + "\';";
+        rs = stmt.executeQuery(query);
+        rs.next();
+        sportsmen.setSportId(rs.getInt(1));
+        sportsmen.setSportCategory(sportsmenForm.getSportCategory());
+        sportsmen.setTrainerId(sportsmenForm.getTrainerId());
+        query = "SELECT * FROM club WHERE name=\'" + sportsmenForm.getClubName() + "\' AND sportId=" + sportsmen.getSportId() + ";";
+        rs = stmt.executeQuery(query);
+        rs.next();
+        sportsmen.setClubId(rs.getInt(1));
+        sportsmen.setNumberOfParticipation(sportsmenForm.getNumberOfParticipation());
+        return sportsmen;
+    }
+
+    public List<Stadium> getAllStadium() throws SQLException {
+        List<Stadium> stadiums = new ArrayList<>();
+        String query = "SELECT * FROM stadium;";
+        rs = stmt.executeQuery(query);
+        while (rs.next()) {
+            Stadium tempStadium = new Stadium();
+            tempStadium.setId(rs.getInt(1));
+            tempStadium.setName(rs.getString(2));
+            tempStadium.setAddress(rs.getString(3));
+            tempStadium.setNumberOfViewers(rs.getInt(4));
+            tempStadium.setType(rs.getString(5));
+            stadiums.add(tempStadium);
+        }
+        return stadiums;
+    }
+
+    public void saveStadium(Stadium stadiumForm) throws SQLException {
+        Integer id = stadiumForm.getId();
+        String name = stadiumForm.getName();
+        String address = stadiumForm.getAddress();
+        Integer numberOfViewers = stadiumForm.getNumberOfViewers();
+        String type = stadiumForm.getType();
+        String values = id + ",\'" + name + "\'" + ",\'" + address + "\'" +
+                "," + numberOfViewers + ",\'" + type + "\'";
+        String query = "INSERT INTO stadium" + " VALUES (" + values + ");";
+        stmt.executeUpdate(query);
+    }
+
+    public Stadium getStadiumById(int id) throws SQLException {
+        String query = "SELECT * FROM stadium WHERE idstadium=" + id + ";";
+        rs = stmt.executeQuery(query);
+        rs.next();
+        Stadium stadium = new Stadium();
+        stadium.setId(rs.getInt(1));
+        stadium.setName(rs.getString(2));
+        stadium.setAddress(rs.getString(3));
+        stadium.setNumberOfViewers(rs.getInt(4));
+        stadium.setType(rs.getString(5));
+        return stadium;
+    }
+
+    public void deleteStadium(int id) throws SQLException {
+        String query = "UPDATE organizes_and_history_sports_competitions SET address=\'null\'" +
+                " WHERE address=\'" + getStadiumById(id).getAddress() + "\' ;";
+        stmt.executeUpdate(query);
+        query = "DELETE FROM stadium WHERE idstadium=" + id + ";";
+        stmt.executeUpdate(query);
+    }
+
+    public void updateStadium(Stadium updatedStadium) throws SQLException {
+        String query = "UPDATE stadium SET name=\'" + updatedStadium.getName() + "\'" +
+                " WHERE idstadium=" + updatedStadium.getId() + ";";
+        stmt.executeUpdate(query);
+        query = "UPDATE organizes_and_history_sports_competitions SET address=\'" + updatedStadium.getAddress() +
+                "\' WHERE address=\'" + getStadiumById(updatedStadium.getId()).getAddress() + "\';";
+        stmt.executeUpdate(query);
+        query = "UPDATE stadium SET address=\'" + updatedStadium.getAddress() + "\'" +
+                " WHERE idstadium=" + updatedStadium.getId() + ";";
+        stmt.executeUpdate(query);
+        query = "UPDATE stadium SET numberOfViewers=" + updatedStadium.getNumberOfViewers() +
+                " WHERE idstadium=" + updatedStadium.getId() + ";";
+        stmt.executeUpdate(query);
+        query = "UPDATE stadium SET type=\'" + updatedStadium.getType() + "\'" +
+                " WHERE idstadium=" + updatedStadium.getId() + ";";
+        stmt.executeUpdate(query);
+    }
+
+    public List<SwimmingPool> getAllSwimmingPool() throws SQLException {
+        List<SwimmingPool> swimmingPools = new ArrayList<>();
+        String query = "SELECT * FROM swimming_pool;";
+        rs = stmt.executeQuery(query);
+        while (rs.next()) {
+            SwimmingPool tempSwimmingPool = new SwimmingPool();
+            tempSwimmingPool.setId(rs.getInt(1));
+            tempSwimmingPool.setName(rs.getString(2));
+            tempSwimmingPool.setAddress(rs.getString(3));
+            tempSwimmingPool.setDepth(rs.getInt(4));
+            tempSwimmingPool.setNumberOfTower(rs.getInt(5));
+            swimmingPools.add(tempSwimmingPool);
+        }
+        return swimmingPools;
+    }
+
+    public void saveSwimmingPool(SwimmingPool swimmingPoolForm) throws SQLException {
+        Integer id = swimmingPoolForm.getId();
+        String name = swimmingPoolForm.getName();
+        String address = swimmingPoolForm.getAddress();
+        Integer depth = swimmingPoolForm.getDepth();
+        Integer numberOfTower = swimmingPoolForm.getNumberOfTower();
+        String values = id + ",\'" + name + "\'" + ",\'" + address + "\'" + "," +
+                depth + "," + numberOfTower;
+        String query = "INSERT INTO swimming_pool" + " VALUES (" + values + ");";
+        stmt.executeUpdate(query);
+    }
+
+    public SwimmingPool getSwimmingPoolById(int id) throws SQLException {
+        String query = "SELECT * FROM swimming_pool WHERE idswimming_pool=" + id + ";";
+        rs = stmt.executeQuery(query);
+        rs.next();
+        SwimmingPool swimmingPool = new SwimmingPool();
+        swimmingPool.setId(rs.getInt(1));
+        swimmingPool.setName(rs.getString(2));
+        swimmingPool.setAddress(rs.getString(3));
+        swimmingPool.setDepth(rs.getInt(4));
+        swimmingPool.setNumberOfTower(rs.getInt(5));
+        return swimmingPool;
+    }
+
+    public void deleteSwimmingPool(int id) throws SQLException {
+        String query = "UPDATE organizes_and_history_sports_competitions SET address=\'null\'" +
+                " WHERE address=\'" + getSwimmingPoolById(id).getAddress() + "\' ;";
+        stmt.executeUpdate(query);
+        query = "DELETE FROM swimming_pool WHERE idswimming_pool=" + id + ";";
+        stmt.executeUpdate(query);
+    }
+
+    public void updateSwimmingPool(SwimmingPool updateSwimmingPool) throws SQLException {
+        String query = "UPDATE swimming_pool SET name=\'" + updateSwimmingPool.getName() + "\'" +
+                " WHERE idswimming_pool=" + updateSwimmingPool.getId() + ";";
+        stmt.executeUpdate(query);
+        query = "UPDATE organizes_and_history_sports_competitions SET address=\'" + updateSwimmingPool.getAddress() +
+                "\' WHERE address=\'" + getSwimmingPoolById(updateSwimmingPool.getId()).getAddress() + "\';";
+        stmt.executeUpdate(query);
+        query = "UPDATE swimming_pool SET address=\'" + updateSwimmingPool.getAddress() + "\'" +
+                " WHERE idswimming_pool=" + updateSwimmingPool.getId() + ";";
+        stmt.executeUpdate(query);
+        query = "UPDATE swimming_pool SET depth=" + updateSwimmingPool.getDepth() +
+                " WHERE idswimming_pool=" + updateSwimmingPool.getId() + ";";
+        stmt.executeUpdate(query);
+        query = "UPDATE swimming_pool SET numberOfTower=" + updateSwimmingPool.getNumberOfTower() +
+                " WHERE idswimming_pool=" + updateSwimmingPool.getId() + ";";
+        stmt.executeUpdate(query);
+    }
+
+    public List<Track> getAllTrack() throws SQLException {
+        List<Track> tracks = new ArrayList<>();
+        String query = "SELECT * FROM track;";
+        rs = stmt.executeQuery(query);
+        while (rs.next()) {
+            Track tempTrack = new Track();
+            tempTrack.setId(rs.getInt(1));
+            tempTrack.setName(rs.getString(2));
+            tempTrack.setAddress(rs.getString(3));
+            tempTrack.setTypeOfCover(rs.getString(4));
+            tempTrack.setLengthTrack(rs.getInt(5));
+            tracks.add(tempTrack);
+        }
+        return tracks;
+    }
+
+    public void saveTrack(Track trackForm) throws SQLException {
+        Integer id = trackForm.getId();
+        String name = trackForm.getName();
+        String address = trackForm.getAddress();
+        String typeOfCover = trackForm.getTypeOfCover();
+        Integer lengthTrack = trackForm.getLengthTrack();
+        String values = id + ",\'" + name + "\'" + ",\'" + address + "\'" + ",\'" + typeOfCover + "\'," + lengthTrack;
+        String query = "INSERT INTO track" + " VALUES (" + values + ");";
+        stmt.executeUpdate(query);
+    }
+
+    public Track getTrackById(int id) throws SQLException {
+        String query = "SELECT * FROM track WHERE idtrack=" + id + ";";
+        rs = stmt.executeQuery(query);
+        rs.next();
+        Track track = new Track();
+        track.setId(rs.getInt(1));
+        track.setName(rs.getString(2));
+        track.setAddress(rs.getString(3));
+        track.setTypeOfCover(rs.getString(4));
+        track.setLengthTrack(rs.getInt(5));
+        return track;
+    }
+
+    public void deleteTrack(int id) throws SQLException {
+        String query = "UPDATE organizes_and_history_sports_competitions SET address=\'null\'" +
+                " WHERE address=\'" + getTrackById(id).getAddress() + "\' ;";
+        stmt.executeUpdate(query);
+        query = "DELETE FROM track WHERE idtrack=" + id + ";";
+        stmt.executeUpdate(query);
+    }
+
+    public void updateTrack(Track updateTrack) throws SQLException {
+        String query = "UPDATE track SET name=\'" + updateTrack.getName() + "\'" +
+                " WHERE idtrack=" + updateTrack.getId() + ";";
+        stmt.executeUpdate(query);
+        query = "UPDATE organizes_and_history_sports_competitions SET address=\'" + updateTrack.getAddress() +
+                "\' WHERE address=\'" + getTrackById(updateTrack.getId()).getAddress() + "\';";
+        stmt.executeUpdate(query);
+        query = "UPDATE track SET address=\'" + updateTrack.getAddress() + "\'" +
+                " WHERE idtrack=" + updateTrack.getId() + ";";
+        stmt.executeUpdate(query);
+        query = "UPDATE track SET typeOfCover=\'" + updateTrack.getTypeOfCover() + "\'" +
+                " WHERE idtrack=" + updateTrack.getId() + ";";
+        stmt.executeUpdate(query);
+        query = "UPDATE track SET lenghtTrack_m=" + updateTrack.getLengthTrack() +
+                " WHERE idtrack=" + updateTrack.getId() + ";";
+        stmt.executeUpdate(query);
+    }
+
+    public List<Trainer> getAllTrainer() throws SQLException {
+        List<Trainer> trainers = new ArrayList<>();
+        String query = "SELECT * FROM trainer;";
+        rs = stmt.executeQuery(query);
+        while (rs.next()) {
+            Trainer tempTrainer = new Trainer();
+            tempTrainer.setId(rs.getInt(1));
+            tempTrainer.setName(rs.getString(2));
+            tempTrainer.setPersonalKey(rs.getInt(3));
+            tempTrainer.setSportId(rs.getInt(4));
+            trainers.add(tempTrainer);
+        }
+        return trainers;
+    }
+
+    public void saveTrainer(Trainer trainerForm) throws SQLException {
+        String query = "SELECT * FROM sport WHERE idsport=" + trainerForm.getSportId() + ";";
+        rs = stmt.executeQuery(query);
+        int size = 0;
+        if (rs != null) {
+            rs.last();    // moves cursor to the last row
+            size = rs.getRow(); // get row id
+        }
+        if (size != 0) {
+            Integer id = trainerForm.getId();
+            String name = trainerForm.getName();
+            Integer personalKey = trainerForm.getPersonalKey();
+            Integer sportId = trainerForm.getSportId();
+            String values = id + ",\'" + name + "\'" + "," + personalKey + "," + sportId;
+            query = "INSERT INTO trainer" + " VALUES (" + values + ");";
+            stmt.executeUpdate(query);
+        }
+    }
+
+    public Trainer getTrainerById(int id) throws SQLException {
+        String query = "SELECT * FROM trainer WHERE idtrainer=" + id + ";";
+        rs = stmt.executeQuery(query);
+        TableController tableController = new TableController(url, user, password);
+        if (tableController.checkSize(rs)) {
+            rs.beforeFirst();
+            rs.next();
+            Trainer trainer = new Trainer();
+            trainer.setId(rs.getInt(1));
+            trainer.setName(rs.getString(2));
+            trainer.setPersonalKey(rs.getInt(3));
+            trainer.setSportId(rs.getInt(4));
+            return trainer;
+        }
+        return new Trainer();
+    }
+
+    public void deleteTrainer(int id) throws SQLException {
+        String query = "UPDATE sportsmen SET trainerId=0" +
+                " WHERE trainerId=" + id + ";";
+        stmt.executeUpdate(query);
+
+        query = "DELETE FROM trainer WHERE idtrainer=" + id + ";";
+        stmt.executeUpdate(query);
+    }
+
+    public void updateTrainer(Trainer updateTrainer) throws SQLException {
+        String query = "UPDATE trainer SET name=\'" + updateTrainer.getName() + "\'" +
+                " WHERE idtrainer=" + updateTrainer.getId() + ";";
+        stmt.executeUpdate(query);
+    }
+
+    public List<TrainerForm> toTrainerFrom(List<Trainer> trainers) throws SQLException {
+        List<TrainerForm> trainerFormList = new ArrayList<>(trainers.size());
+        for (int i = 0; i < trainers.size(); i++) {
+            TrainerForm tempTrainerForm = new TrainerForm();
+            if (trainers.get(i).getSportId() != 0) {
+                String query = "SELECT * FROM sport WHERE idsport=" + trainers.get(i).getSportId() + ";";
+                rs = stmt.executeQuery(query);
+                rs.next();
+                tempTrainerForm.setSport(rs.getString(2));
+            } else {
+                tempTrainerForm.setSport("null");
+            }
+            tempTrainerForm.setId(trainers.get(i).getId());
+            tempTrainerForm.setName(trainers.get(i).getName());
+            tempTrainerForm.setPersonalKey(trainers.get(i).getPersonalKey());
+            trainerFormList.add(tempTrainerForm);
+        }
+        return trainerFormList;
     }
 }
