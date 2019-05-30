@@ -30,6 +30,7 @@ public class MainController {
     private SportsmenDAO sportsmenDAO = new SportsmenDAO(url, user, passwordDb);
     private SportGymDAO sportGymDAO = new SportGymDAO(url, user, passwordDb);
     private SportDAO sportDAO = new SportDAO(url, user, passwordDb);
+
     /*
     private PasswordDAO passwordDAO = new PasswordDAO(url, user, passwordDb);
     private StadiumDAO stadiumDAO = new StadiumDAO(url, user, passwordDb);
