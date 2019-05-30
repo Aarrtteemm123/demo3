@@ -42,9 +42,6 @@ public class TrackDAO {
             tempTrack.setLengthTrack(rs.getInt(5));
             tracks.add(tempTrack);
         }
-        con.close();
-        stmt.close();
-        rs.close();
         return tracks;
     }
 
