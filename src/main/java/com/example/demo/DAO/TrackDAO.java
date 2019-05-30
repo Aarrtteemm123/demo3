@@ -33,6 +33,9 @@ public class TrackDAO {
         List<Track> tracks = new ArrayList<>();
         String query = "SELECT * FROM track;";
         rs = stmt.executeQuery(query);
+        con.close();
+        stmt.close();
+        rs.close();
         while (rs.next()) {
             Track tempTrack = new Track();
             tempTrack.setId(rs.getInt(1));
