@@ -1,6 +1,7 @@
 package com.example.demo.Controller;
 
 import com.example.demo.DAO.*;
+import com.example.demo.Database;
 import com.example.demo.Model.*;
 import com.example.demo.tableForm.*;
 import org.springframework.stereotype.Controller;
@@ -21,6 +22,15 @@ public class MainController {
     private boolean flagFilter = false;
     private Boolean flagAccess = null;
     private TableController tableController = new TableController(url, user, passwordDb);
+    private Database database = new Database(url, user, passwordDb);
+    private TrainerDAO trainerDAO = new TrainerDAO(url, user, passwordDb);
+    private TrackDAO trackDAO = new TrackDAO(url, user, passwordDb);
+    private SwimmingPoolDAO swimmingPoolDAO = new SwimmingPoolDAO(url, user, passwordDb);
+    private StadiumDAO stadiumDAO = new StadiumDAO(url, user, passwordDb);
+    private SportsmenDAO sportsmenDAO = new SportsmenDAO(url, user, passwordDb);
+    private SportGymDAO sportGymDAO = new SportGymDAO(url, user, passwordDb);
+    private SportDAO sportDAO = new SportDAO(url, user, passwordDb);
+    /*
     private PasswordDAO passwordDAO = new PasswordDAO(url, user, passwordDb);
     private StadiumDAO stadiumDAO = new StadiumDAO(url, user, passwordDb);
     private ManegeDAO manegeDAO = new ManegeDAO(url, user, passwordDb);
@@ -35,6 +45,7 @@ public class MainController {
     private SportsmenDAO sportsmenDAO = new SportsmenDAO(url, user, passwordDb);
     private ClubDAO clubDAO = new ClubDAO(url, user, passwordDb);
     private HistoryDAO historyDAO = new HistoryDAO(url, user, passwordDb);
+    */
     private List<Stadium> bufferStadiumList = new ArrayList<>();
     private List<Manege> bufferManegeList = new ArrayList<>();
     private List<SportGym> bufferSportGymList = new ArrayList<>();
@@ -79,7 +90,7 @@ public class MainController {
     @RequestMapping(value = "/title", method = RequestMethod.POST)
     public String checkPassword(@ModelAttribute QueryForm queryForm, Model model) throws SQLException {
         flagAccess = null;
-        if (passwordDAO.readPassword(queryForm.getString(), queryForm.getString2()) != null && passwordDAO.readPassword(queryForm.getString(), queryForm.getString2())) {
+        if (database.readPassword(queryForm.getString(), queryForm.getString2()) != null && database.readPassword(queryForm.getString(), queryForm.getString2())) {
             flagAccess = queryForm.getString().equals("admin");
             return "redirect:/sportsmen/list";
         }
@@ -209,7 +220,7 @@ public class MainController {
             model.addAttribute("queryForm", queryForm);
             flagFilter = true;
         } else {
-            List<Manege> maneges = manegeDAO.getAllManege();
+            List<Manege> maneges = database.getAllManege();
             QueryForm queryForm = new QueryForm();
             model.addAttribute("maneges", maneges);
             model.addAttribute("queryForm", queryForm);
@@ -226,7 +237,7 @@ public class MainController {
         if (queryForm.getString().equals("")) {
             return "redirect:/manege/list";
         } else if (!(queryForm.getString().equals(""))) {
-            manegeDAO.getAllManege().stream().filter(manege -> manege.getTypeOfCover().equals(queryForm.getString())).forEach(result::add);
+            database.getAllManege().stream().filter(manege -> manege.getTypeOfCover().equals(queryForm.getString())).forEach(result::add);
             bufferManegeList = result;
             return "redirect:/manege/list";
         }
@@ -247,7 +258,7 @@ public class MainController {
         if (flagAccess == null)
             return "redirect:/title";
         if (flagAccess && tableController.checkIdInTable("manege", manegeForm.getId()) && tableController.checkAddressInTable("manege", manegeForm.getAddress())) {
-            manegeDAO.saveManege(manegeForm);
+            database.saveManege(manegeForm);
             return "redirect:/manege/list";
         } else {
             return "redirect:/manege/add";
@@ -258,7 +269,7 @@ public class MainController {
     public String editManege(Model model, @PathVariable Integer id) throws SQLException {
         if (flagAccess == null)
             return "redirect:/title";
-        Manege manege = manegeDAO.getManegeById(id);
+        Manege manege = database.getManegeById(id);
         globalBufferId = id;
         model.addAttribute("manege", manege);
         return "Edit/editManege";
@@ -270,7 +281,7 @@ public class MainController {
             return "redirect:/title";
         if (flagAccess && tableController.checkUpdateAddress("manege", manege.getAddress(), globalBufferId)) {
             manege.setId(globalBufferId);
-            manegeDAO.updateManege(manege);
+            database.updateManege(manege);
         }
         return "redirect:/manege/list";
     }
@@ -281,7 +292,7 @@ public class MainController {
         if (flagAccess == null)
             return "redirect:/title";
         if (flagAccess)
-            manegeDAO.deleteManege(id);
+            database.deleteManege(id);
         return "redirect:/manege/list";
     }
 
@@ -393,7 +404,7 @@ public class MainController {
             model.addAttribute("queryForm", queryForm);
             flagFilter = true;
         } else {
-            List<Court> courts = courtDAO.getAllCourt();
+            List<Court> courts = database.getAllCourt();
             QueryForm queryForm = new QueryForm();
             model.addAttribute("courts", courts);
             model.addAttribute("queryForm", queryForm);
@@ -410,7 +421,7 @@ public class MainController {
         if (queryForm.getNum() == 0) {
             return "redirect:/court/list";
         } else if (queryForm.getNum() != 0) {
-            courtDAO.getAllCourt().stream().filter(court -> court.getNumberOfPlayground() < queryForm.getNum()).forEach(result::add);
+            database.getAllCourt().stream().filter(court -> court.getNumberOfPlayground() < queryForm.getNum()).forEach(result::add);
             bufferCourtList = result;
             return "redirect:/court/list";
         }
@@ -431,7 +442,7 @@ public class MainController {
         if (flagAccess == null)
             return "redirect:/title";
         if (flagAccess && tableController.checkIdInTable("court", courtForm.getId()) && tableController.checkAddressInTable("court", courtForm.getAddress()) && courtForm.getNumberOfPlayground() > 0) {
-            courtDAO.saveCourt(courtForm);
+            database.saveCourt(courtForm);
             return "redirect:/court/list";
         }
         return "redirect:/court/add";
@@ -441,7 +452,7 @@ public class MainController {
     public String editCourt(Model model, @PathVariable Integer id) throws SQLException {
         if (flagAccess == null)
             return "redirect:/title";
-        Court court = courtDAO.getCourtById(id);
+        Court court = database.getCourtById(id);
         globalBufferId = id;
         model.addAttribute("court", court);
         return "Edit/editCourt";
@@ -453,7 +464,7 @@ public class MainController {
             return "redirect:/title";
         if (flagAccess && tableController.checkUpdateAddress("court", court.getAddress(), globalBufferId) && court.getNumberOfPlayground() > 0) {
             court.setId(globalBufferId);
-            courtDAO.updateCourt(court);
+            database.updateCourt(court);
         }
         return "redirect:/court/list";
     }
@@ -464,7 +475,7 @@ public class MainController {
         if (flagAccess == null)
             return "redirect:/title";
         if (flagAccess)
-            courtDAO.deleteCourt(id);
+            database.deleteCourt(id);
         return "redirect:/court/list";
     }
 
@@ -682,7 +693,7 @@ public class MainController {
             model.addAttribute("queryForm", queryForm);
             flagFilter = true;
         } else {
-            List<BoardGames> boardGames = boardGamesDAO.getAllBoardGames();
+            List<BoardGames> boardGames = database.getAllBoardGames();
             QueryForm queryForm = new QueryForm();
             model.addAttribute("boardGames", boardGames);
             model.addAttribute("queryForm", queryForm);
@@ -699,7 +710,7 @@ public class MainController {
         if (queryForm.getNum() == 0) {
             return "redirect:/boardGames/list";
         } else if (queryForm.getNum() != 0) {
-            boardGamesDAO.getAllBoardGames().stream().filter(boardGames -> boardGames.getNumberOfTable() < queryForm.getNum()).forEach(result::add);
+            database.getAllBoardGames().stream().filter(boardGames -> boardGames.getNumberOfTable() < queryForm.getNum()).forEach(result::add);
             bufferBoardGamesList = result;
             return "redirect:/boardGames/list";
         }
@@ -720,7 +731,7 @@ public class MainController {
         if (flagAccess == null)
             return "redirect:/title";
         if (flagAccess && tableController.checkIdInTable("board_games", boardGamesForm.getId()) && tableController.checkAddressInTable("board_games", boardGamesForm.getAddress()) && boardGamesForm.getNumberOfTable() >= 0) {
-            boardGamesDAO.saveBoardGames(boardGamesForm);
+            database.saveBoardGames(boardGamesForm);
             return "redirect:/boardGames/list";
         }
         return "redirect:/boardGames/add";
@@ -730,7 +741,7 @@ public class MainController {
     public String editBoardGames(Model model, @PathVariable Integer id) throws SQLException {
         if (flagAccess == null)
             return "redirect:/title";
-        BoardGames boardGames = boardGamesDAO.getBoardGamesById(id);
+        BoardGames boardGames = database.getBoardGamesById(id);
         globalBufferId = id;
         model.addAttribute("boardGames", boardGames);
         return "Edit/editBoardGames";
@@ -742,7 +753,7 @@ public class MainController {
             return "redirect:/title";
         if (flagAccess && tableController.checkUpdateAddress("board_games", boardGames.getAddress(), globalBufferId) && boardGames.getNumberOfTable() >= 0) {
             boardGames.setId(globalBufferId);
-            boardGamesDAO.updateBoardGames(boardGames);
+            database.updateBoardGames(boardGames);
         }
         return "redirect:/boardGames/list";
     }
@@ -753,7 +764,7 @@ public class MainController {
         if (flagAccess == null)
             return "redirect:/title";
         if (flagAccess)
-            boardGamesDAO.deleteBoardGames(id);
+            database.deleteBoardGames(id);
         return "redirect:/boardGames/list";
     }
 
@@ -773,7 +784,7 @@ public class MainController {
             model.addAttribute("queryForm", queryForm);
             flagFilter = true;
         } else {
-            List<IceRink> iceRinks = iceRinkDAO.getAllIceRink();
+            List<IceRink> iceRinks = database.getAllIceRink();
             QueryForm queryForm = new QueryForm();
             model.addAttribute("iceRink", iceRinks);
             model.addAttribute("queryForm", queryForm);
@@ -790,7 +801,7 @@ public class MainController {
         if (queryForm.getNum() == 0) {
             return "redirect:/iceRink/list";
         } else if (queryForm.getNum() != 0) {
-            iceRinkDAO.getAllIceRink().stream().filter(iceRink -> iceRink.getSquare() < queryForm.getNum()).forEach(result::add);
+            database.getAllIceRink().stream().filter(iceRink -> iceRink.getSquare() < queryForm.getNum()).forEach(result::add);
             bufferIceRinkList = result;
             return "redirect:/iceRink/list";
         }
@@ -811,7 +822,7 @@ public class MainController {
         if (flagAccess == null)
             return "redirect:/title";
         if (flagAccess && tableController.checkIdInTable("ice_rink", iceRinkForm.getId()) && tableController.checkAddressInTable("ice_rink", iceRinkForm.getAddress()) && iceRinkForm.getSquare() > 0) {
-            iceRinkDAO.saveIceRink(iceRinkForm);
+            database.saveIceRink(iceRinkForm);
             return "redirect:/iceRink/list";
         }
         return "redirect:/iceRink/add";
@@ -821,7 +832,7 @@ public class MainController {
     public String editIceRink(Model model, @PathVariable Integer id) throws SQLException {
         if (flagAccess == null)
             return "redirect:/title";
-        IceRink iceRink = iceRinkDAO.getIceRinkById(id);
+        IceRink iceRink = database.getIceRinkById(id);
         globalBufferId = id;
         model.addAttribute("iceRink", iceRink);
         return "Edit/editIceRink";
@@ -833,7 +844,7 @@ public class MainController {
             return "redirect:/title";
         if (flagAccess && tableController.checkUpdateAddress("ice_rink", iceRink.getAddress(), globalBufferId) && iceRink.getSquare() > 0) {
             iceRink.setId(globalBufferId);
-            iceRinkDAO.updateIceRink(iceRink);
+            database.updateIceRink(iceRink);
         }
         return "redirect:/iceRink/list";
     }
@@ -844,7 +855,7 @@ public class MainController {
         if (flagAccess == null)
             return "redirect:/title";
         if (flagAccess)
-            iceRinkDAO.deleteIceRink(id);
+            database.deleteIceRink(id);
         return "redirect:/iceRink/list";
     }
 
@@ -1187,8 +1198,8 @@ public class MainController {
         if (flagAccess == null)
             return "redirect:/title";
         model = setAccess(model);
-        List<Club> clubs = clubDAO.getAllClub();
-        List<ClubForm> clubFormList = clubDAO.toClubForm(clubs);
+        List<Club> clubs = database.getAllClub();
+        List<ClubForm> clubFormList = database.toClubForm(clubs);
         QueryForm queryForm = new QueryForm();
         List<Sportsmen> sportsmenList = sportsmenDAO.getAllSportsmen();
         queryForm.setNum2((int) (sportsmenList.stream().filter(sportsmen -> sportsmen.getClubId() == globalBufferId).count()));
@@ -1220,8 +1231,8 @@ public class MainController {
         if (flagAccess == null)
             return "redirect:/title";
         if (flagAccess && tableController.checkSaveDataInTableClub(clubForm)) {
-            Club club = clubDAO.toClub(clubForm);
-            clubDAO.saveClub(club);
+            Club club = database.toClub(clubForm);
+            database.saveClub(club);
             return "redirect:/club/list";
         }
         return "redirect:/club/add";
@@ -1231,10 +1242,10 @@ public class MainController {
     public String editClub(Model model, @PathVariable Integer id) throws SQLException {
         if (flagAccess == null)
             return "redirect:/title";
-        Club club = clubDAO.getClubById(id);
+        Club club = database.getClubById(id);
         List<Club> clubList = new ArrayList<>(1);
         clubList.add(club);
-        List<ClubForm> clubFormList = clubDAO.toClubForm(clubList);
+        List<ClubForm> clubFormList = database.toClubForm(clubList);
         globalBufferId = id;
         model.addAttribute("clubFormList", clubFormList.get(0));
         return "Edit/editClub";
@@ -1246,7 +1257,7 @@ public class MainController {
             return "redirect:/title";
         if (flagAccess && tableController.checkNameInTable("club", clubForm.getName())) {
             clubForm.setId(globalBufferId);
-            clubDAO.updateClub(clubForm);
+            database.updateClub(clubForm);
         }
         return "redirect:/club/list";
     }
@@ -1257,7 +1268,7 @@ public class MainController {
         if (flagAccess == null)
             return "redirect:/title";
         if (flagAccess)
-            clubDAO.deleteClub(id);
+            database.deleteClub(id);
         return "redirect:/club/list";
     }
 
@@ -1277,8 +1288,8 @@ public class MainController {
             model.addAttribute("queryForm", queryForm);
             flagFilter = true;
         } else {
-            List<History> historyList = historyDAO.getAllHistory();
-            List<HistoryForm> historyFormList = historyDAO.toHistoryForm(historyList);
+            List<History> historyList = database.getAllHistory();
+            List<HistoryForm> historyFormList = database.toHistoryForm(historyList);
             QueryForm queryForm = new QueryForm();
             model.addAttribute("historyFormList", historyFormList);
             model.addAttribute("queryForm", queryForm);
@@ -1292,8 +1303,8 @@ public class MainController {
             return "redirect:/title";
         List<HistoryForm> result = new ArrayList<>(100);
         flagFilter = false;
-        List<History> historyList = historyDAO.getAllHistory();
-        List<HistoryForm> historyFormList = historyDAO.toHistoryForm(historyList);
+        List<History> historyList = database.getAllHistory();
+        List<HistoryForm> historyFormList = database.toHistoryForm(historyList);
         if (queryForm.getNum2() != 0) {
             historyFormList.stream().filter(historyForm -> historyForm.getId() == queryForm.getNum2()).forEach(result::add);
             bufferHistoryFormList = result;
@@ -1341,8 +1352,8 @@ public class MainController {
         if (flagAccess == null)
             return "redirect:/title";
         List<HistoryForm> result = new ArrayList<>(100);
-        List<History> historyList = historyDAO.getAllHistory();
-        List<HistoryForm> historyFormList = historyDAO.toHistoryForm(historyList);
+        List<History> historyList = database.getAllHistory();
+        List<HistoryForm> historyFormList = database.toHistoryForm(historyList);
         flagFilter = false;
         if (queryForm.getString().equals("") && queryForm.getString2().equals("")) {
             return "redirect:/organizesAndHistorySportsCompetitions/list";
@@ -1362,8 +1373,8 @@ public class MainController {
     public String getFilterHistory2(Model model) throws SQLException {
         if (flagAccess == null)
             return "redirect:/title";
-        List<History> historyList = historyDAO.getAllHistory();
-        List<HistoryForm> historyFormList = historyDAO.toHistoryForm(historyList);
+        List<History> historyList = database.getAllHistory();
+        List<HistoryForm> historyFormList = database.toHistoryForm(historyList);
         QueryForm queryForm = new QueryForm();
         model.addAttribute("queryForm", queryForm);
         model.addAttribute("historyFormList", historyFormList);
@@ -1384,7 +1395,7 @@ public class MainController {
         if (flagAccess == null)
             return "redirect:/title";
         if (flagAccess && tableController.checkSaveDataInTableHistory(historyForm)) {
-            historyDAO.saveHistory(historyForm);
+            database.saveHistory(historyForm);
             return "redirect:/organizesAndHistorySportsCompetitions/list";
         }
         return "redirect:/organizesAndHistorySportsCompetitions/add";
@@ -1394,10 +1405,10 @@ public class MainController {
     public String editHistory(Model model, @PathVariable Integer id) throws SQLException {
         if (flagAccess == null)
             return "redirect:/title";
-        History history = historyDAO.getHistoryById(id);
+        History history = database.getHistoryById(id);
         List<History> historyList = new ArrayList<>(1);
         historyList.add(history);
-        List<HistoryForm> historyFormList = historyDAO.toHistoryForm(historyList);
+        List<HistoryForm> historyFormList = database.toHistoryForm(historyList);
         globalBufferId = id;
         model.addAttribute("historyForm", historyFormList.get(0));
         return "Edit/editOrganizesAndHistorySportsCompetitions";
@@ -1409,7 +1420,7 @@ public class MainController {
             return "redirect:/title";
         if (flagAccess && tableController.checkAddressInAllTable(historyForm.getAddress()) && tableController.checkDateToPattern(historyForm.getDate())) {
             historyForm.setId(globalBufferId);
-            historyDAO.updateHistory(historyForm);
+            database.updateHistory(historyForm);
         }
         return "redirect:/organizesAndHistorySportsCompetitions/list";
     }
@@ -1420,7 +1431,7 @@ public class MainController {
         if (flagAccess == null)
             return "redirect:/title";
         if (flagAccess)
-            historyDAO.deleteHistory(id);
+            database.deleteHistory(id);
         return "redirect:/organizesAndHistorySportsCompetitions/list";
     }
 
