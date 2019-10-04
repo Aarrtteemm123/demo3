@@ -1,0 +1,21 @@
+.textCenter {
+    text-align: center;
+}
+
+.layer2 {
+    position: absolute; /* Абсолютное позиционирование */
+    top: 0px;
+    left: 20px;
+}
+
+.layer1 {
+    position: absolute; /* Абсолютное позиционирование */
+    top: 0px;
+    left: 850px;
+}
+
+.layer3 {
+    position: absolute; /* Абсолютное позиционирование */
+    top: 250px;
+    left: 200px;
+}
